@@ -1,8 +1,10 @@
 <template>
   
   <div class="details-container">
-    <div class="sub-container1"><div class="div">Back</div>
-    <div class="item-image">here goes the image</div></div>
+      <div class="sub-container1">
+        <div class="back">Back</div>
+        <div class="item-image">here goes the image</div>
+      </div>
     
     <div class="right-panel">
       <div class="publisher">
@@ -28,7 +30,7 @@ import {items} from '../data/items'
 .details-container{
   width: 100%;
   height: 100vh;
-  background: rgba(0, 0, 0, .3);
+  
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -37,7 +39,20 @@ import {items} from '../data/items'
 .sub-container1{
   width: 65%;
   height: 80%;
-  border: 1px solid black;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+ 
+  box-shadow: 0px 2px 40px rgba(0, 0, 0, 0.2);
+}
+.back{
+  width: 90%;
+  height: 5vh;
+  margin-bottom: 2vh;
+  display: flex;
+  align-items: center;
 }
 .right-panel{
   width: 25%;
@@ -48,7 +63,7 @@ import {items} from '../data/items'
 .item-image{
   width: 90%;
   height: 80%;
-  border: 1px solid black;
+ box-shadow: 0px 2px 40px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
