@@ -62,9 +62,9 @@ const routes = [
     component : RegisterView
   },
   {
-    path: '/product/:id',
+    path: '/:id',
     name :'sp',
-    
+    component : () => import ('../views/ProductDetails.vue')
   }
 ]
 

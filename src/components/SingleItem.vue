@@ -1,11 +1,20 @@
 <template>
   <div class="container3">
-    <div class="image"></div>
+    <div class="image">
+        <div class="inner-image">
+            <div>
+            <button>Add to Cart</button>
+            <router-link :to="`/${id}`" class="show">Show</router-link>
+            </div>
+            
+        </div>
+      
+    </div>
     <div class="bottom-section">
         <div class="title-price">
-            <span>title</span>
-            <span> {{first}} </span>
-            <span>99$</span>
+            <span>{{title}}</span>
+            <span>  </span>
+            <span>{{price}}$</span>
         </div>
         <div class="uimage-name">
             <div class="user-image"></div>
@@ -20,18 +29,61 @@
 
   export default {
   props: {
-    first: String,
+    id: Number,
+  title: String,
+  price: Number
   }
   }
 
 </script>
 
 <style scoped>
+
+
+.inner-image{
+    width: 100%;
+    height: 75%;
+    transition: .3s ease all;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 99;
+
+}
+
+.inner-image div{
+    display: none;
+    
+    width: 50%;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+
+.inner-image div button, .show {
+    border: none;
+    background: transparent;
+    color: rgba(0, 108, 196);
+
+    cursor: pointer;
+    font-size: 17px;
+    text-decoration: none;
+
+}
+.inner-image:hover{
+    background: rgba(36, 36, 36, 0.3);
+   
+}
+.inner-image:hover div{
+    display: flex;
+}
+
 .container3{
     width: 400px;
     height: 400px;
     background: #525252;
-    
+    position: relative;
     border: none;
     display: flex;
     flex-direction: column;

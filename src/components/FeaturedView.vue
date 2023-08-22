@@ -1,12 +1,7 @@
 <template>
-  <div class="show-items">
+  <div class="show-items" >
 
-    <SingleItem :first ='first' />
-    <SingleItem :first ='first' />
-    <SingleItem :first ='first' />
-    <SingleItem :first ='first' />
-    <SingleItem :first ='first' />
-    <SingleItem :first ='first' />
+     <SingleItem v-for="item in items" :key="item.id" :id="item.id" :title="item.title" :price="item.price" />
     
 
     </div>
@@ -15,8 +10,10 @@
 
 <script setup>
 import SingleItem from './SingleItem.vue'
+import {items} from '../data/items'
 
-const first = ""
+
+
 
 
 </script>

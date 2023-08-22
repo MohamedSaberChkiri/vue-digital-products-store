@@ -16,7 +16,7 @@
 <script setup>
 import SingleItem from './SingleItem.vue'
 
-const first = ""
+const first = "trending"
 
 
 </script>
