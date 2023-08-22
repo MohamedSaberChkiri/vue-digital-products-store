@@ -1,37 +1,37 @@
 export const items = [
     {
       id: 1,
-      title: "Abstract Design 1",
+      title: "Abstract Design ",
       price: 15.99,
       category: "Graphics"
     },
     {
       id: 2,
-      title: "Modern Web Template 1",
+      title: "Modern Web Template",
       price: 29.99,
       category: "Web Design"
     },
     {
       id: 3,
-      title: "Digital Illustration 1",
+      title: "Digital Illustration ",
       price: 12.49,
       category: "Illustrations"
     },
     {
       id: 4,
-      title: "Creative Logo 1",
+      title: "Creative Logo ",
       price: 49.99,
       category: "Graphics"
     },
     {
       id: 5,
-      title: "Elegant Business Card 1",
+      title: "Elegant Business Card ",
       price: 9.99,
       category: "Printables"
     },
     {
       id: 6,
-      title: "Abstract Design 2",
+      title: "Abstract Design ",
       price: 15.99,
       category: "Graphics"
     },
