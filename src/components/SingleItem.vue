@@ -3,7 +3,7 @@
     <div class="image">
         <div class="inner-image">
             <div>
-            <button>Add to Cart</button>
+            <button @click="addItemToCart(id)">Add to Cart</button>
             <router-link :to="`/${id}`" class="show">Show</router-link>
             </div>
             
@@ -25,16 +25,25 @@
 </template>
 
 <script>
+import { addItemToCart } from '../data/cart.js';
 
-
-  export default {
+export default {
   props: {
     id: Number,
-  title: String,
-  price: Number
+    title: String,
+    price: Number
+  },
+  methods: {
+    addItemToCart() {
+      const item = {
+        id: this.id,
+        title: this.title,
+        price: this.price
+      };
+      addItemToCart(item);
+    }
   }
-  }
-
+};
 </script>
 
 <style scoped>
