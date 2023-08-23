@@ -4,7 +4,9 @@
 
 
         <div class="sub-container1">
-              <div class="back">Back</div>
+              <div class="back" >
+                  <button @click="router.go(-1)"> Back </button>
+              </div>
               <div class="item-image">here goes the image</div>
         </div>
     
@@ -60,8 +62,9 @@
 
 <script setup>
 import {items} from '../data/items'
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
+const router = useRouter()
 
 const productId = route.params.id;
 const product = items.find(item => item.id === Number(productId));
@@ -164,7 +167,23 @@ hr{
   margin-bottom: 2vh;
   display: flex;
   align-items: center;
+  justify-content: start;
 }
+.back button{
+  width: 100px;
+  height: 3vh;
+  border-radius: 20px;
+  border: 1px solid rgb(88, 88, 88);
+  background: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: .3s ease all;
+}
+.back button:hover{
+  background: rgb(97, 97, 97);
+  color: white;
+}
+
 .right-panel{
   margin-top: 5vh;
   width: 400px;
