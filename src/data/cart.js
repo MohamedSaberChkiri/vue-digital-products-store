@@ -1,16 +1,13 @@
 // cart.js
-export const cart = [];
+export let cart = [];
 
 export function addItemToCart(item) {
   cart.push(item);
 }
 
-export function removeItemFromCart(itemId) {
-    const index = cart.findIndex(item => item.id === itemId);
-    if (index !== -1) {
-      cart.splice(index, 1);
-    }
-  }
+export function itemIdToRemove(id){cart = cart.filter(item => item.id !== id);}// Replace with the actual ID of the item to remove
+ // Create a new array without the item to remove
+
   
 
 export function getCartItems() {
