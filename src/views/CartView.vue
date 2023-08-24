@@ -29,11 +29,11 @@
       <div class="summary">
           <h1>Summary</h1>
           <div class="summary-container">
-            <div class="st"><span>Subtotal</span><span>{{subtotal}}$</span></div>
+            <div class="st"><span>Subtotal</span><span>{{ComputedSubtotal}}$</span></div>
             <div class="es"><span>Estimated Shipping and Handling</span><span>{{fees}}$</span></div>
             <div class="et"><span>Estimated Tax</span><span>-</span></div>
             <hr>
-            <div class="total"><span>Total </span><span>{{total}}$</span></div>
+            <div class="total"><span>Total </span><span>{{roundedTotal}}$</span></div>
             <hr>
             <button id="checkout">Checkout</button>
             <button id="paypal">PayPal</button>
@@ -45,36 +45,44 @@
 
 </template>
 
+
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { getCartItems, itemIdToRemove } from '../data/cart';
 
 const cartItems = ref(getCartItems());
-let subtotal = ref(0)
-let fees = ref(8)
-let total = ref(subtotal.value + fees.value)
+const fees = ref(8);
 
 const removeFromCart = (id) => {
-  itemIdToRemove(id)
-  cartItems.value = getCartItems()
-}
-
-
-
+  itemIdToRemove(id);
+  cartItems.value = getCartItems();
+};
 
 const increaseQuantity = (item) => {
   if (item.qt < 10) {
     item.qt++;
-    
   }
 };
 
 const decreaseQuantity = (item) => {
   if (item.qt > 1) {
     item.qt--;
-    
   }
 };
+
+const ComputedSubtotal = computed(() => {
+  return cartItems.value.reduce((sum, item) => {
+    return sum + item.price * item.qt;
+  }, 0);
+});
+
+const total = computed(() => {
+  return ComputedSubtotal.value + fees.value;
+});
+
+const roundedTotal = computed(() => {
+  return total.value.toFixed(2);
+});
 </script>
 
 
