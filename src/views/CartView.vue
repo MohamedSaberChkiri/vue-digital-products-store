@@ -35,8 +35,8 @@
             <hr>
             <div class="total"><span>Total </span><span>{{total}}$</span></div>
             <hr>
-            <button>Checkout</button>
-            <button>PayPal</button>
+            <button id="checkout">Checkout</button>
+            <button id="paypal">PayPal</button>
           </div>
           
       </div>
@@ -75,6 +75,17 @@ const removeFromCart = (id) => {
   justify-content: center;
   
 }
+#checkout{
+  background: #000;
+  
+}
+#checkout:hover{
+  background: #3b3b3b;
+}
+#paypal{
+  background: rgba(0, 108, 196,.8);
+  
+}
 .summary{
   width: 500px;
   height: 400px;
@@ -105,6 +116,9 @@ const removeFromCart = (id) => {
   border-radius: 30px;
   border: none;
   margin: 1vh auto;
+  font-size: 20px;
+  cursor: pointer;
+  color: white;
 }
 hr{
   color: rgba(0, 0, 0, 0.1);
@@ -185,7 +199,7 @@ justify-content: space-around;
 .item-details{
   width: 100%;
   height: 100%;
-  padding: 0 2vh 0 2vh;
+  padding: 2vh 6vh;
   display: flex;
   align-items: center;
   
