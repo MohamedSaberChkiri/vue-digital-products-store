@@ -14,9 +14,9 @@
                                   <h3>{{ item.title }}</h3>
                                   <p>Price: ${{ item.price }}</p>
                                   <div class="quantity">
-                                  <button class="qt" >-</button>
-                                  <span>0</span>
-                                  <button  class="qt">+</button></div>
+                                  <button class="qt" @click="decreaseQuantity(item)" :disabled="item.quantity=== 1">-</button>
+                                  <span>{{ item.qt }}</span>
+                                  <button  class="qt" @click="increaseQuantity(item)" :disabled="item.quantity === 10">+</button></div>
                           </div>
                     </div>
                    
@@ -47,12 +47,12 @@
 
 <script setup>
 import { ref } from 'vue';
-import { getCartItems, itemIdToRemove} from '../data/cart';
+import { getCartItems, itemIdToRemove } from '../data/cart';
 
 const cartItems = ref(getCartItems());
 let subtotal = ref(0)
 let fees = ref(8)
-let total = ref(0)
+let total = ref(subtotal.value + fees.value)
 
 const removeFromCart = (id) => {
   itemIdToRemove(id)
@@ -61,6 +61,20 @@ const removeFromCart = (id) => {
 
 
 
+
+const increaseQuantity = (item) => {
+  if (item.qt < 10) {
+    item.qt++;
+    
+  }
+};
+
+const decreaseQuantity = (item) => {
+  if (item.qt > 1) {
+    item.qt--;
+    
+  }
+};
 </script>
 
 
@@ -134,7 +148,7 @@ hr{
 .quantity span{
   width: 20px;
   height: 20px;
-  
+  color: black;
   display: flex;
   align-items: center;
   justify-content: center;

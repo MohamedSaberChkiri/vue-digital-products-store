@@ -31,14 +31,16 @@ export default {
   props: {
     id: Number,
     title: String,
-    price: Number
+    price: Number,
+    qt : Number
   },
   methods: {
     addItemToCart() {
       const item = {
         id: this.id,
         title: this.title,
-        price: this.price
+        price: this.price,
+        qt : this.qt
       };
       addItemToCart(item);
     }
