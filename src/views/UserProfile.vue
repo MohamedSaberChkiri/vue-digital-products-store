@@ -9,15 +9,16 @@
 
         <div class="profile-picture">
               <div class="image">image here</div>
-              <div class="update-image">Update Picture</div>
+              <input class="update-image" type="image" value="Update Picture" style="color : white; font-size: 15px ;">
         </div>
 
         <div class="links-container">
-          <div>PERSONAL DETAILS</div>
-          <div>MY PRODUCTS</div>
-          <div>PAYMENT METHODS</div>
-          <div>CHANGE PASSWORD</div>
-        
+
+            <router-link to="#" class="button">PERSONAL DETAILS</router-link >
+            <router-link  to="#" class="button">MY PRODUCTS</router-link >
+            <router-link to="#" class="button" >PAYMENT METHODS</router-link >
+            <router-link  to="#" class="button" >CHANGE PASSWORD</router-link >
+          
         </div>
 
 
@@ -27,7 +28,7 @@
 
 <div class="right-side">
 
-
+  <router-view/>
 
 </div>
 
@@ -49,6 +50,15 @@ export default {
 
 <style scoped>
 
+.update-image{
+  width: 150px;
+  border: 1px dashed #FDFDFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4vh;
+  cursor: pointer;
+}
 .container{
   display: flex;
   flex-wrap: wrap;
@@ -58,33 +68,47 @@ export default {
 .left-side{
   height: 100vh;
   width: 400px;
-  border: 1px solid black;
+  
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
+  background: #393D3F;
+  color: #FDFDFF;
 }
 .links-container{
-  border: 1px solid black;
+ 
   height: 60vh;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: space-around;
   width: 100%;
+  position: relative;
 }
-.links-container div{
+.links-container .button{
   width: 90%;
-  border: 1px solid black;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 18px;
   height: 7vh;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 30px 0 0 30px;
+  text-decoration: none;
+  transition: .3s ease all;
+  
+}
+.links-container .button:focus{
+  background: #FDFDFF;
+  color: #393D3F;
 }
 
 .profile-picture{
-  border: 1px solid black;
+  
   width: 100%;
   display: flex;
   align-items: center;

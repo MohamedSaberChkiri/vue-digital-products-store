@@ -54,7 +54,29 @@ const routes = [
   {
     path : '/user',
     name :'user',
-    component : UserProfile
+    component : UserProfile,
+    children : [
+      {
+        path: '/user/PersonalDetails',
+        name :'pd',
+        component : ()=> import('../components/userlinkscomponents/PersonalDetails.vue')
+      },
+      {
+        path : '/user/ChangePassword',
+        name : 'mp',
+        component : ()=> import('../components/userlinkscomponents/ChangePassword.vue')
+      },
+      {
+        path : '/user/PaymentMethod',
+        name : 'pm',
+        component : ()=> import('../components/userlinkscomponents/PaymentMethods.vue')
+      },
+      {
+        path : '/user/myProducts',
+        name : 'mp',
+        component : ()=> import('../components/userlinkscomponents/MyProducts.vue')
+      }
+    ]
   },
   {
     path : '/register',
