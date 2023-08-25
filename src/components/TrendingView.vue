@@ -1,13 +1,7 @@
 <template>
   <div class="show-items">
 
-    <SingleItem :first ='first' />
-    <SingleItem :first ='first' />
-    <SingleItem :first ='first' />
-    <SingleItem :first ='first' />
-    <SingleItem :first ='first' />
-    <SingleItem :first ='first' />
-    
+     <SingleItem v-for="item in items" :key="item.id" :id="item.id" :title="item.title" :price="item.price" :qt="item.qt" />
 
     </div>
   
@@ -15,8 +9,7 @@
 
 <script setup>
 import SingleItem from './SingleItem.vue'
-
-const first = "trending"
+import {items} from '../data/items'
 
 
 </script>
