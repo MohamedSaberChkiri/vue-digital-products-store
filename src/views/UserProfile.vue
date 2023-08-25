@@ -64,7 +64,7 @@ export default {
 }
 .container{
   display: flex;
-  flex-wrap: wrap;
+  
   width: 100%;
   height: fit-content;
 }

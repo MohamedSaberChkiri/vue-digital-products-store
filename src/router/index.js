@@ -69,7 +69,21 @@ const routes = [
       {
         path : '/user/PaymentMethod',
         name : 'pm',
-        component : ()=> import('../components/userlinkscomponents/PaymentMethods.vue')
+        component : ()=> import('../components/userlinkscomponents/PaymentMethods.vue'),
+        children: [
+          {
+            path:'/user/PaymentMethod/card',
+            component : ()=> import('../components/userlinkscomponents/paymentmethods/ByCard.vue')
+          },
+          {
+            path:'/user/PaymentMethod/paypal',
+            component : ()=> import('../components/userlinkscomponents/paymentmethods/ByPaypal.vue')
+          },
+          {
+            path:'/user/PaymentMethod/bank',
+            component : ()=> import('../components/userlinkscomponents/paymentmethods/ByBank.vue')
+          }
+        ]
       },
       {
         path : '/user/myProducts',
