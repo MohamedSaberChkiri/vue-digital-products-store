@@ -63,7 +63,7 @@ const routes = [
       },
       {
         path : '/user/ChangePassword',
-        name : 'mp',
+        name : 'cp',
         component : ()=> import('../components/userlinkscomponents/ChangePassword.vue')
       },
       {

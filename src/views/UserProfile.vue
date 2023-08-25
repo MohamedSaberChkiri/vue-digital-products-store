@@ -9,15 +9,16 @@
 
         <div class="profile-picture">
               <div class="image">image here</div>
-              <input class="update-image" type="image" value="Update Picture" style="color : white; font-size: 15px ;">
+              
+              <button class="update-image"   style="color : white; font-size: 15px ;">Change Profile</button>
         </div>
 
         <div class="links-container">
 
-            <router-link to="#" class="button">PERSONAL DETAILS</router-link >
-            <router-link  to="#" class="button">MY PRODUCTS</router-link >
-            <router-link to="#" class="button" >PAYMENT METHODS</router-link >
-            <router-link  to="#" class="button" >CHANGE PASSWORD</router-link >
+            <router-link to="/user/PersonalDetails" class="button">PERSONAL DETAILS</router-link >
+            <router-link  to="/user/MyProducts" class="button">MY PRODUCTS</router-link >
+            <router-link to="/user/PaymentMethod" class="button" >PAYMENT METHODS</router-link >
+            <router-link  to="/user/ChangePassword" class="button" >CHANGE PASSWORD</router-link >
           
         </div>
 
@@ -55,6 +56,8 @@ export default {
   border: 1px dashed #FDFDFF;
   display: flex;
   align-items: center;
+  background: transparent;
+  color: #FDFDFF;
   justify-content: center;
   height: 4vh;
   cursor: pointer;
