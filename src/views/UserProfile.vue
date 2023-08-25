@@ -129,5 +129,10 @@ export default {
 .username{
   font-size: 40px;
 }
+.right-side{
+  width: fit-content;
+  height: fit-content;
+  margin: 0 auto;
+}
 
 </style>
