@@ -1,8 +1,10 @@
 <template>
-  
   <div class="container1">
-    <HeaderView/>
-    <div class="key" v-if="showResult"><SearchedKeyword/></div>
+    <HeaderView :triggerFunction="changeVariable" @inputData='getInputValue'/>
+    <div class="key" v-if="showResult">
+        <SearchedKeyword  />
+       
+    </div>
     
     <div class="sub-container">
         <h1>Tons of curated design resources to speed up your creative workflow.</h1>
@@ -12,11 +14,20 @@
 </template>
 
 <script setup>
-    import HeaderView from "./HeaderView.vue";
+import HeaderView from "./HeaderView.vue";
 import SearchedKeyword from "./SearchedKeyword.vue";
-import {ref } from 'vue'
-   
-   let showResult = ref(false)
+import {ref} from 'vue'
+
+let showResult = ref(false)
+
+function changeVariable() {
+  showResult.value = !showResult.value;
+}
+
+function getInputValue(value){
+    console.log(value)
+
+}
 
 </script>
 

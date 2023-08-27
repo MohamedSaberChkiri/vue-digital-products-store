@@ -2,10 +2,7 @@
   <div class="centered-container">
     <div class="centered-div">
       <SingleItem/>
-      <SingleItem/>
-      <SingleItem/>
-      <SingleItem/>
-      <SingleItem/>
+   
     </div>
   </div>
 </template>

@@ -1,8 +1,7 @@
 <template>
   <div class="container">
     <div class="logo">Digify</div>
-    
-    <div class="search-bar"><input type="text" placeholder="Search..."></div>
+    <div class="search-bar"><input type="text" placeholder="Search..." @click="callParentFunction" v-model="dataValue" @input="handleData"/></div>
     <div class="user-links">
       <router-link to="/login" class="link">Login</router-link>
       <router-link to="/register" class="link">Sign Up</router-link>
@@ -12,9 +11,33 @@
   </div>
 </template>
 
-<script setup>
+<script>
+import { ref } from 'vue';
 
+export default {
+  props: {
+    triggerFunction: Function,
+  },
+  setup(props, context) {
+    const dataValue = ref('');
+    
+    function handleData(){
+      context.emit('inputData', dataValue.value)
+    }
 
+    const callParentFunction = () => {
+      if (props.triggerFunction) {
+        props.triggerFunction();
+      }
+    };
+
+    return {
+      dataValue,
+      callParentFunction,
+      handleData
+    };
+  },
+};
 </script>
 
 <style scoped>
