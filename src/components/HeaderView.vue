@@ -6,13 +6,14 @@
     <div class="user-links">
       <router-link to="/login" class="link">Login</router-link>
       <router-link to="/register" class="link">Sign Up</router-link>
-      <router-link to="/cart" class="link">Cart</router-link>
+      <router-link to="/cart" class="link" id="cart">Cart </router-link>
       
     </div>
   </div>
 </template>
 
 <script setup>
+
 
 </script>
 

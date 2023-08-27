@@ -2,6 +2,8 @@
   
   <div class="container1">
     <HeaderView/>
+    <div class="key" v-if="showResult"><SearchedKeyword/></div>
+    
     <div class="sub-container">
         <h1>Tons of curated design resources to speed up your creative workflow.</h1>
         <h3>Join a growing family of designers and makers from around the world.</h3>
@@ -11,6 +13,10 @@
 
 <script setup>
     import HeaderView from "./HeaderView.vue";
+import SearchedKeyword from "./SearchedKeyword.vue";
+import {ref } from 'vue'
+   
+   let showResult = ref(false)
 
 </script>
 
@@ -22,6 +28,7 @@
     padding-bottom: 50px;
     background: #006cc4;
     color: white;
+    position: relative;
     
     
 }
@@ -48,5 +55,9 @@ h3{
     margin-top: 30px;
 }
 
-
+.key{
+    width: 80%;
+    position: relative;
+    margin: auto;
+}
 </style>
