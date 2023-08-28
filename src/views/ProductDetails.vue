@@ -7,7 +7,17 @@
               <div class="back" >
                   <button @click="router.go(-1)"> Back </button>
               </div>
-              <div class="item-image">here goes the image</div>
+
+
+            <div class="item-image">
+                    <div class="single-image" :style="{ background: selectedImage }"></div>
+
+                          <div class="other-images">
+                                  <div v-for="(image, index) in images" :key="index" class="image" @click="selectImage(image)">
+                                    {{ image }}
+                                  </div>
+                    </div>
+  </div>
         </div>
     
         <div class="right-panel">
@@ -92,12 +102,48 @@ const product = items.find(item => item.id === Number(productId));
   }, 3000); // Hide the success message after 3000 milliseconds (3 seconds)
     }
 
+    const selectedImage = ref('image 5');
+const images = ['green', 'black', 'yellow', 'red'];
+
+const selectImage = (image) => {
+  selectedImage.value = image;
+};
+
 
 
 
 </script>
 
 <style scoped>
+
+.single-image, .image{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.other-images{
+  width: 60%;
+  height: 15vh;
+ 
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
+
+}
+.image{
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+
+}
+
+.single-image{
+  width: 70%;
+  height: 300px;
+  border: 1px solid black;
+
+}
 
 .added-status{
   position: absolute;
@@ -242,8 +288,10 @@ hr{
   height: 80%;
  box-shadow: 0px 2px 40px rgba(0, 0, 0, 0.2);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2vh;
 }
 .right-panel{
   display: flex;
