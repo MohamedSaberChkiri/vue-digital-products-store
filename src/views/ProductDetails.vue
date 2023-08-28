@@ -47,7 +47,7 @@
       <hr>
 
           <div class="buttons-conatainer">
-            <button>Add to Cart</button>
+            <button @click="AddItemToCart(product.id)">Add to Cart</button>
             <button>Buy Now</button>
           </div>
           
@@ -63,11 +63,25 @@
 <script setup>
 import {items} from '../data/items'
 import { useRoute, useRouter } from 'vue-router';
+import { addItemToCart } from '../data/cart.js';
+
+
 const route = useRoute();
 const router = useRouter()
 
 const productId = route.params.id;
 const product = items.find(item => item.id === Number(productId));
+
+  function AddItemToCart() {
+      const item = {
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        qt : product.qt
+      };
+      addItemToCart(item);
+      console.log('added')
+    }
 
 
 </script>
