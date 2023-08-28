@@ -25,8 +25,13 @@ let showResult = ref(false)
 
 
 
+
+
 function changeVariable() {
   showResult.value = !showResult.value;
+  
+  
+ 
 }
 
 let result = ref([])
