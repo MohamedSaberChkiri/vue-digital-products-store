@@ -53,6 +53,8 @@
           
    </div>
 
+   <div class="added-status" :class="{'sc': showSuccessMessage}">Added Successfully</div>
+
 </div>
 
    
@@ -64,10 +66,13 @@
 import {items} from '../data/items'
 import { useRoute, useRouter } from 'vue-router';
 import { addItemToCart } from '../data/cart.js';
+import { ref } from 'vue'
 
 
 const route = useRoute();
 const router = useRouter()
+const showSuccessMessage = ref(false);
+
 
 const productId = route.params.id;
 const product = items.find(item => item.id === Number(productId));
@@ -80,14 +85,40 @@ const product = items.find(item => item.id === Number(productId));
         qt : product.qt
       };
       addItemToCart(item);
-      console.log('added')
+      
+      showSuccessMessage.value = true;
+  setTimeout(() => {
+    showSuccessMessage.value = false;
+  }, 3000); // Hide the success message after 3000 milliseconds (3 seconds)
     }
+
+
 
 
 </script>
 
 <style scoped>
 
+.added-status{
+  position: absolute;
+  width: 350px;
+  height: 7vh;
+  background: lightblue;
+  bottom: 0;
+  right: 3vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:rgb(19, 151, 19);
+  border: 1px solid rgb(8, 102, 0);
+  color: white;
+  font-size: 18px;
+  transition: .4s ease-in-out all;
+  opacity: 0;
+  }
+.sc{
+  opacity: 1;
+}
 hr{
   width: 70%;
   color:rgba(0, 0, 0, .1) ;
@@ -162,6 +193,7 @@ hr{
   align-items: center;
   justify-content: space-around;
   padding-top: 5vh;
+  position: relative;
 }
 
 .sub-container1{

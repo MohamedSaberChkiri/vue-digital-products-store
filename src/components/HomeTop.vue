@@ -54,6 +54,7 @@ function getInputValue(value) {
     background: #006cc4;
     color: white;
     position: relative;
+  
     
     
 }
