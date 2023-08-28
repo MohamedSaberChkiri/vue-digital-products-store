@@ -1,14 +1,63 @@
 <template>
   <div class="centered-container">
     <div class="centered-div">
-      <SingleItem/>
-   
+      <SingleItem v-for="product in productsToShow" :key="product.id" :id='product.id' :title='product.title' :price='product.price' :qt='product.qt' />
+
     </div>
   </div>
 </template>
 
-<script setup>
+<script>
 import SingleItem from './SingleItem.vue'
+import { ref, watch, computed } from 'vue'
+import {items} from '../data/items'
+
+
+export default{
+  props: {
+    result : Array
+  },
+  components:{
+    SingleItem
+  },
+  setup(props){
+
+        // Create a reactive reference for the prop
+    const reactiveResult = ref(props.result)
+
+    // Watch for changes in the prop and update the reactive reference
+    watch(() => props.result, (newResult) => {
+      reactiveResult.value = newResult
+      
+    })
+
+    const products = ref([]);
+
+   const fetchProductsForIds = () => {
+      products.value = items.filter((product) => props.result.includes(product.id));
+    };
+
+    watch(() => props.result, () => {
+      fetchProductsForIds();
+     
+    });
+
+    const productsToShow = computed(() => {
+      return products.value;
+    });
+
+
+
+
+  return{
+    
+    productsToShow
+
+  }
+    
+  }
+
+}
 
 
 

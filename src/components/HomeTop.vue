@@ -2,7 +2,7 @@
   <div class="container1">
     <HeaderView :triggerFunction="changeVariable" @inputData='getInputValue'/>
     <div class="key" v-if="showResult">
-        <SearchedKeyword  />
+        <SearchedKeyword :result='result' />
        
     </div>
     
@@ -16,17 +16,26 @@
 <script setup>
 import HeaderView from "./HeaderView.vue";
 import SearchedKeyword from "./SearchedKeyword.vue";
+import {items } from '../data/items'
 import {ref} from 'vue'
 
 let showResult = ref(false)
+
+
+
+
 
 function changeVariable() {
   showResult.value = !showResult.value;
 }
 
-function getInputValue(value){
-    console.log(value)
+let result = ref([])
 
+function getInputValue(value) {
+  const keywordLower = value.toLowerCase();
+  const filteredItems = items.filter(item => item.title.toLowerCase().includes(keywordLower));
+  result.value = filteredItems.map(item => item.id);
+  
 }
 
 </script>

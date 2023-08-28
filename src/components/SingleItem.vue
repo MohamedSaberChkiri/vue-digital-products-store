@@ -32,7 +32,8 @@ export default {
     id: Number,
     title: String,
     price: Number,
-    qt : Number
+    qt : Number,
+    
   },
   methods: {
     addItemToCart() {
@@ -99,6 +100,7 @@ export default {
     display: flex;
     flex-direction: column;
     box-shadow: 0px 2px 40px rgba(0, 108, 196, .2);
+    color: black;
 }
 .image{
     width:100%;
