@@ -16,30 +16,30 @@
 </template>
 
 <script setup>
+
 import axios from 'axios';
 import { ref } from 'vue';
 
 const email = ref('');
 const password = ref('');
 
-const submitForm = async () => {
-  try {
-    const response = await axios.post('http://localhost:3000/api/login', {
-      email: email.value,
-      password: password.value,
+const submitForm = () => {
+  const userData = {
+    email: email.value,
+    password: password.value,
+  };
+
+  axios
+    .post('http://localhost:3000/api/login', userData)
+    .then(response => {
+      console.log(response.data.message, 'logged in');
+      // Handle success, e.g., redirect to a new route
+    })
+    .catch(error => {
+      console.error(error.response.data.message);
+      // Handle error, e.g., display an error message to the user
     });
-
-    if (response.status === 200){
-      console.log('logged in ')
-    }
-
-    // Handle the response, set cookies, redirect, etc.
-  } catch (error) {
-    console.error('Login error:', error);
-  }
 };
-
-
 </script>
 
 <style scoped>

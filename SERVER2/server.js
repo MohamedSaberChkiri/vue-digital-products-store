@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt'); // Import bcrypt
 const cors = require('cors')
 
 // Initialize Express app
@@ -47,12 +48,15 @@ app.post('/api/register', async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(password, 10); // 10 is the number of salt rounds
+
     // Create a new user
     const newUser = new User({
       firstname,
       lastname,
       email,
-      password,
+      password: hashedPassword, // Store the hashed password
     });
 
     await newUser.save();
@@ -63,6 +67,30 @@ app.post('/api/register', async (req, res) => {
     return res.status(500).json({ message: 'Server error' });
   }
 });
+
+
+app.post('/api/login', async (req, res) => {
+    try {
+      const { email, password } = req.body;
+  
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+  
+      // Compare hashed password
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (!passwordMatch) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+  
+      // Successful login
+      return res.status(200).json({ message: 'Login successful' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Server error' });
+    }
+  });
 
 // Start the server
 app.listen(port, () => {
