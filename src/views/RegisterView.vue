@@ -54,6 +54,7 @@ const submitForm = async () => {
       email: email.value,
       password: password.value,
     });
+    
 
      if (response.status === 200) {
       // Login successful, navigate to the user page
@@ -63,6 +64,7 @@ const submitForm = async () => {
     // Handle the response, show a success message, redirect, etc.
   } catch (error) {
     console.error('Registration error:', error);
+ 
   }
 }
 

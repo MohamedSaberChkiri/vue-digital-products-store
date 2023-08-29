@@ -18,7 +18,7 @@ async function startServer() {
         credentials: true,
         origin : 'http://localhost:8080'
     }));
-
+    
 
     // Use cookie-parser middleware
     app.use(cp());
