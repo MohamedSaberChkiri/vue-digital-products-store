@@ -20,16 +20,31 @@
 </template>
 
 <script setup>
-import axios from 'axios'
+
 import {ref} from 'vue'
 import { useRouter } from 'vue-router';
 const router = useRouter();
+import axios from 'axios'
 
 
 const firstname = ref('');
 const lastname = ref('');
 const email = ref('');
 const password = ref('');
+
+// const submitForm = async () => {
+//   console.log('Sending request with data:', {
+//     firstname: firstname.value,
+//     lastname: lastname.value,
+//     email: email.value,
+//     password: password.value,
+//   });
+//   try {
+//     // ... rest of your code ...
+//   } catch (error) {
+//     console.error('Registration error:', error);
+//   }
+// };
 
 const submitForm = async () => {
   try {
@@ -49,7 +64,7 @@ const submitForm = async () => {
   } catch (error) {
     console.error('Registration error:', error);
   }
-};
+}
 
 </script>
 

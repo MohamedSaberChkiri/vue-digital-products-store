@@ -18,6 +18,7 @@ router.post('/register',async(req, res)=>{
         password: hashedPassword,
 
     })
+    
 
     res.send(await user.save())
 })

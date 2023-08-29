@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const cp = require('cookie-parser');
 
-const app = express();
 
 async function startServer() {
   try {
@@ -14,10 +13,12 @@ async function startServer() {
     console.log('Connected to the database');
 
     // Use cors middleware before mounting routes
+    const app = express();
     app.use(cors({
-      credentials: true,
-      origin: ['http://localhost:8080'],
+        credentials: true,
+        origin : 'http://localhost:8080'
     }));
+
 
     // Use cookie-parser middleware
     app.use(cp());
