@@ -21,52 +21,34 @@
 
 <script setup>
 
+import axios from 'axios';
 import {ref} from 'vue'
-import { useRouter } from 'vue-router';
-const router = useRouter();
-import axios from 'axios'
-
 
 const firstname = ref('');
 const lastname = ref('');
 const email = ref('');
 const password = ref('');
 
-// const submitForm = async () => {
-//   console.log('Sending request with data:', {
-//     firstname: firstname.value,
-//     lastname: lastname.value,
-//     email: email.value,
-//     password: password.value,
-//   });
-//   try {
-//     // ... rest of your code ...
-//   } catch (error) {
-//     console.error('Registration error:', error);
-//   }
-// };
+const submitForm = () => {
+  const userData = {
+    firstname: firstname.value,
+    lastname: lastname.value,
+    email: email.value,
+    password: password.value,
+  };
 
-const submitForm = async () => {
-  try {
-    const response = await axios.post('http://localhost:3000/api/register', {
-      firstname: firstname.value,
-      lastname: lastname.value,
-      email: email.value,
-      password: password.value,
+  axios
+    .post('http://localhost:3000/api/register', userData)
+    .then(response => {
+      console.log(response.data.message, 'registred');
+      // Handle success
+
+    })
+    .catch(error => {
+      console.error(error.response.data.message);
+      // Handle error
     });
-    
-
-     if (response.status === 200) {
-      // Login successful, navigate to the user page
-      router.push('/login');
-      } // Assuming your user page route is '/user'
-
-    // Handle the response, show a success message, redirect, etc.
-  } catch (error) {
-    console.error('Registration error:', error);
- 
-  }
-}
+};
 
 </script>
 
