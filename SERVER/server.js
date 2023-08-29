@@ -1,5 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const cors = require('cors')
+const cp = require('cookie-parser')
 app = express()
 
 
@@ -13,13 +15,19 @@ async function startServer() {
 
 
       app.listen(3000)
+      const routes = require('./routes/routes')
+      app.use('/api', routes)
 
-      app.get('/',(req, res)=>{
-          res.send('hello from node server')
-      })
+      app.use(cors({
+        credentials : true, // this guy here named cors prevent a port error the browser causes and i set credentials to true so the cookies can be exchanged
+        origin:['http://localhost:8080']
+      }))
+
+      app.use(cp())
+   
 
 
-      
+
     } catch (error) {
       console.error('Error connecting to the database:', error);
     }
