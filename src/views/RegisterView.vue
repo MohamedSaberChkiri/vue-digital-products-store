@@ -2,15 +2,15 @@
 
 
 <div class="container4">
-  <form @submit.prevent>
+  <form @submit.prevent="submitForm">
     <h1>Register</h1>
     <h5>Open a FREE Account</h5>
     <div class="register-name">
-      <input type="text" placeholder="First Name"> 
-      <input type="text" placeholder="Last Name">
+      <input type="text" placeholder="First Name" v-model="firstname"> 
+      <input type="text" placeholder="Last Name" v-model="lastname">
     </div>
-    <input type="email" placeholder="Email" id="email">
-    <input type="password" placeholder="Password" id="password">
+    <input type="email" placeholder="Email" id="email" v-model="email">
+    <input type="password" placeholder="Password" id="password" v-model="password">
     <input type="password" placeholder="Repeat Password" id="password">
     <input type="submit" value="Open An Account" id="submit">
     <router-link to="/Login" id="register-link">Already have an Account ?</router-link>
@@ -20,6 +20,36 @@
 </template>
 
 <script setup>
+import axios from 'axios'
+import {ref} from 'vue'
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+
+const firstname = ref('');
+const lastname = ref('');
+const email = ref('');
+const password = ref('');
+
+const submitForm = async () => {
+  try {
+    const response = await axios.post('http://localhost:3000/api/register', {
+      firstname: firstname.value,
+      lastname: lastname.value,
+      email: email.value,
+      password: password.value,
+    });
+
+     if (response.status === 200) {
+      // Login successful, navigate to the user page
+      router.push('/login');
+      } // Assuming your user page route is '/user'
+
+    // Handle the response, show a success message, redirect, etc.
+  } catch (error) {
+    console.error('Registration error:', error);
+  }
+};
 
 </script>
 

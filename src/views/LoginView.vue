@@ -2,12 +2,12 @@
 
 
 <div class="container4">
-  <form @submit.prevent>
+  <form @submit.prevent='submitForm'>
     <h1>Login</h1>
     <h5>Enter Your Details</h5>
     
-    <input type="email" placeholder="Email" id="email">
-    <input type="password" placeholder="Password" id="password">
+    <input type="email" placeholder="Email" id="email" v-model="email">
+    <input type="password" placeholder="Password" id="password" v-model="password">
     <input type="submit" value="Login" id="submit">
     <router-link to="/register" id="register-link">don't have an Account ?</router-link>
   </form>
@@ -16,6 +16,29 @@
 </template>
 
 <script setup>
+import axios from 'axios';
+import { ref } from 'vue';
+
+const email = ref('');
+const password = ref('');
+
+const submitForm = async () => {
+  try {
+    const response = await axios.post('http://localhost:3000/api/login', {
+      email: email.value,
+      password: password.value,
+    });
+
+    if (response.status === 200){
+      console.log('logged in ')
+    }
+
+    // Handle the response, set cookies, redirect, etc.
+  } catch (error) {
+    console.error('Login error:', error);
+  }
+};
+
 
 </script>
 
