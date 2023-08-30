@@ -2,7 +2,7 @@
 
 
 <div class="container4">
-  <form @submit.prevent='submitForm'>
+  <form @submit.prevent='login'>
     <h1>Login</h1>
     <h5>Enter Your Details</h5>
     
@@ -19,26 +19,34 @@
 
 import axios from 'axios';
 import { ref } from 'vue';
+import {useRouter} from 'vue-router'
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+
+const router = useRouter()
 
 const email = ref('');
 const password = ref('');
 
-const submitForm = () => {
-  const userData = {
-    email: email.value,
-    password: password.value,
-  };
 
-  axios
-    .post('http://localhost:3000/api/login', userData)
-    .then(response => {
-      console.log(response.data.message, 'logged in');
-      // Handle success, e.g., redirect to a new route
-    })
-    .catch(error => {
-      console.error(error.response.data.message);
-      // Handle error, e.g., display an error message to the user
-    });
+const login = async (event) => {
+  event.preventDefault();
+
+  try {
+    const response = await axios.post('http://localhost:3000/api/login', {
+      email: email.value,
+      password: password.value,
+    }, { withCredentials: true });
+
+    store.commit('setAuthToken', response.data.token); // Set authToken in the store
+
+    console.log(response.data.message); // "Login successful"
+    router.push('/user'); // Navigate to the profile page
+  } catch (error) {
+    console.error(error);
+  }
 };
 </script>
 

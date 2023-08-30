@@ -4,7 +4,7 @@
 <div class="left-side">
 
 
-       <div class="username">username</div>
+       <div class="username" v-if="user">{{user.firstname}}</div>
 
 
         <div class="profile-picture">
@@ -19,6 +19,7 @@
             <router-link  to="/user/MyProducts" class="button">MY PRODUCTS</router-link >
             <router-link to="/user/PaymentMethod" class="button" >PAYMENT METHODS</router-link >
             <router-link  to="/user/ChangePassword" class="button" >CHANGE PASSWORD</router-link >
+            <button @click="logout">Logout</button>
           
         </div>
 
@@ -43,11 +44,55 @@
 
 </template>
 
-<script>
-export default {
+<script setup>
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import { useStore } from 'vuex'; // Import useStore from vuex
 
-}
+const user = ref(null);
+const router = useRouter();
+const store = useStore(); // Access the Vuex store instance
+
+const fetchUserProfile = async () => {
+  try {
+    const token = store.getters.authToken; // Retrieve the authToken from the store
+
+    if (!token) {
+      console.error('Token is missing');
+      return;
+    }
+
+    const response = await axios.get('http://localhost:3000/api/user', {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    user.value = response.data;
+  } catch (error) {
+    console.error(error);
+    // Handle unauthorized or other errors
+  }
+};
+
+
+
+const logout = async () => {
+  try {
+    await axios.post('http://localhost:3000/api/logout', {}, { withCredentials: true });
+    router.push('/login');
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+onMounted(async () => {
+  await fetchUserProfile(); // Wait for data before rendering
+});
 </script>
+
 
 <style scoped>
 

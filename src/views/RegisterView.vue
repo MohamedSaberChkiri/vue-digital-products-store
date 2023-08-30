@@ -24,6 +24,7 @@
 import axios from 'axios';
 import {ref} from 'vue'
 
+
 const firstname = ref('');
 const lastname = ref('');
 const email = ref('');
@@ -40,8 +41,9 @@ const submitForm = () => {
   axios
     .post('http://localhost:3000/api/register', userData)
     .then(response => {
-      console.log(response.data.message, 'registred');
+      console.log(response.data.message);
       // Handle success
+    
 
     })
     .catch(error => {
