@@ -23,7 +23,9 @@
 
 import axios from 'axios';
 import {ref} from 'vue'
+import {useRouter} from 'vue-router'
 
+const router = useRouter()
 
 const firstname = ref('');
 const lastname = ref('');
@@ -43,6 +45,7 @@ const submitForm = () => {
     .then(response => {
       console.log(response.data.message);
       // Handle success
+      router.push('/login')
     
 
     })

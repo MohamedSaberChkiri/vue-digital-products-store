@@ -6,6 +6,7 @@ import LoginView from '../views/LoginView.vue'
 import ProductDetails from '../views/ProductDetails.vue'
 import UserProfile from '../views/UserProfile.vue'
 import RegisterView from '../views/RegisterView.vue'
+import store from '../store/index'
 
 const routes = [
   {
@@ -55,6 +56,15 @@ const routes = [
     path : '/user',
     name :'user',
     component : UserProfile,
+    beforeEnter: (to, from, next) => {
+      const isAuthenticated = store.getters.isAuthenticated; // Use the isAuthenticated getter
+      if (isAuthenticated) {
+        next(); // Allow access to the route
+      } else {
+        next('/login'); // Redirect to the login page
+      }
+    }
+  ,
     children : [
       {
         path: '/user/PersonalDetails',
@@ -109,5 +119,25 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+// Add a navigation guard to prevent back navigation to /user after logout
+// Server-Side Logout
+// When the user logs out, send a request to invalidate the session/token on the server
+// This step ensures that server-side access control is maintained
+
+// Client-Side Navigation Guard
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = store.getters.isAuthenticated;
+
+  // If user is not authenticated and trying to access a restricted route
+  if (!isAuthenticated && to.path === '/user') {
+    // Redirect to login page
+    next('/login');
+  } else {
+    // Continue with navigation
+    next();
+  }
+});
+
 
 export default router

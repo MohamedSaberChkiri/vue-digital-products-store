@@ -110,6 +110,10 @@ app.get('/api/user', async (req, res) => {
       return res.status(401).json({ message: 'User not authenticated' });
     }
 
+    if (tokenBlacklist.has(token)) {
+      return res.status(401).json({ message: 'Token is invalid' });
+    }
+
     try {
       const decoded = jwt.verify(token, 'germany');
       const userId = decoded.userId;
@@ -131,17 +135,21 @@ app.get('/api/user', async (req, res) => {
 });
 
 
-app.post('/api/logout', (req, res) => {
-  // Clear the session and cookies
-  res.clearCookie('session'); // 'session' should match the name you provided in the session configuration
 
-  req.session.destroy((error) => {
-    if (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Logout failed' });
+const tokenBlacklist = new Set();
+
+app.post('/api/logout', (req, res) => {
+  try {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    if (token) {
+      tokenBlacklist.add(token); // Add the token to the blacklist
     }
-    return res.status(200).json({ message: 'Logout successful' });
-  });
+    // ... Perform any other necessary logout operations
+    return res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error' });
+  }
 });
 
 

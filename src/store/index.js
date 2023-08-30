@@ -13,6 +13,7 @@ const store = createStore({
   },
   getters: {
     authToken: (state) => state.authToken,
+    isAuthenticated: (state) => !!state.authToken, // New getter for authentication check
   },
 });
 

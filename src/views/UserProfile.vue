@@ -20,6 +20,7 @@
             <router-link to="/user/PaymentMethod" class="button" >PAYMENT METHODS</router-link >
             <router-link  to="/user/ChangePassword" class="button" >CHANGE PASSWORD</router-link >
             <button @click="logout">Logout</button>
+            <router-link to='/'>go to store</router-link>
           
         </div>
 
@@ -83,6 +84,8 @@ const logout = async () => {
   try {
     await axios.post('http://localhost:3000/api/logout', {}, { withCredentials: true });
     router.push('/login');
+    window.location.reload()
+    console.log('logged out')
   } catch (error) {
     console.error(error);
   }

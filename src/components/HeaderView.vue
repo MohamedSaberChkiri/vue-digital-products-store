@@ -3,8 +3,9 @@
     <div class="logo">Digify</div>
     <div class="search-bar"><input type="text" placeholder="Search..." @click="callParentFunction" v-model="dataValue" @input="handleData"/></div>
     <div class="user-links">
-      <router-link to="/login" class="link">Login</router-link>
-      <router-link to="/register" class="link">Sign Up</router-link>
+      <router-link to="/login" class="link" v-if="!showUser">Login</router-link>
+      <router-link to="/register" class="link" v-if="!showUser">Sign Up</router-link>
+      <router-link to="/user" class="link" v-if="showUser">My Profile</router-link>
       <router-link to="/cart" class="link" id="cart">Cart </router-link>
       
     </div>
@@ -13,6 +14,8 @@
 
 <script>
 import { ref } from 'vue';
+import { useStore } from 'vuex'; // Import useStore from vuex
+
 
 export default {
   props: {
@@ -20,7 +23,15 @@ export default {
   },
   setup(props, context) {
     const dataValue = ref('');
-    
+    const store = useStore()
+    const token = store.getters.authToken;
+    let showUser = ref(false)
+    if (token){
+      showUser.value = true
+    } else{
+      showUser.value = false
+    }
+
     function handleData(){
       context.emit('inputData', dataValue.value)
     }
@@ -34,7 +45,8 @@ export default {
     return {
       dataValue,
       callParentFunction,
-      handleData
+      handleData,
+      showUser
     };
   },
 };
