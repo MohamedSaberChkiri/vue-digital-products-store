@@ -15,7 +15,7 @@
 
         <div class="links-container">
 
-            <router-link to="/user/PersonalDetails" class="button">PERSONAL DETAILS</router-link >
+            <router-link  to="/user/PersonalDetails" class="button" ref="defaultLink" autofocus>PERSONAL DETAILS</router-link >
             <router-link  to="/user/MyProducts" class="button">MY PRODUCTS</router-link >
             <router-link to="/user/PaymentMethod" class="button" >PAYMENT METHODS</router-link >
             <router-link  to="/user/ChangePassword" class="button" >CHANGE PASSWORD</router-link >
@@ -55,17 +55,13 @@ const user = ref(null);
 const router = useRouter();
 const store = useStore(); // Access the Vuex store instance
 
+const defaultLink = ref(null);
 
-const storedToken = document.cookie
-  .split('; ')
-  .find((row) => row.startsWith('authToken='))
-  ?.split('=')[1];
-
-if (storedToken) {
-  store.commit('setAuthToken', storedToken);
-}
-
-
+onMounted(() => {
+  if (defaultLink.value) {
+    router.push(defaultLink.value.$props.to);
+  }
+});
 
 const fetchUserProfile = async () => {
   try {
