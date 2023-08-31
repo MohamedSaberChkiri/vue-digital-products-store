@@ -96,12 +96,7 @@ app.post('/api/login', async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, 'germany', { expiresIn: '1h' });
 
-    res.cookie('authToken', token, {
-      maxAge: 60 * 60 * 1000, // 1 hour
-      httpOnly: true,
-      sameSite: 'none',
-      secure: true,
-    });
+ 
 
     return res.status(200).json({ token, message: 'logged in' });
   } catch (error) {
