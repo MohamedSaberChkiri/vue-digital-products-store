@@ -19,8 +19,8 @@
             <router-link  to="/user/MyProducts" class="button">MY PRODUCTS</router-link >
             <router-link to="/user/PaymentMethod" class="button" >PAYMENT METHODS</router-link >
             <router-link  to="/user/ChangePassword" class="button" >CHANGE PASSWORD</router-link >
-            <button @click="logout">Logout</button>
-            <router-link to='/'>go to store</router-link>
+            <button @click="logout" class="button">Logout</button>
+            <router-link to='/' class="button">go to store</router-link>
           
         </div>
 
@@ -55,9 +55,22 @@ const user = ref(null);
 const router = useRouter();
 const store = useStore(); // Access the Vuex store instance
 
+
+const storedToken = document.cookie
+  .split('; ')
+  .find((row) => row.startsWith('authToken='))
+  ?.split('=')[1];
+
+if (storedToken) {
+  store.commit('setAuthToken', storedToken);
+}
+
+
+
 const fetchUserProfile = async () => {
   try {
-    const token = store.getters.authToken; // Retrieve the authToken from the store
+    const token = store.getters.authToken ;
+    
 
     if (!token) {
       console.error('Token is missing');
@@ -83,7 +96,12 @@ const fetchUserProfile = async () => {
 const logout = async () => {
   try {
     await axios.post('http://localhost:3000/api/logout', {}, { withCredentials: true });
-    router.push('/login');
+        // Clear the token from Vuex
+    store.commit('setAuthToken', null);
+
+    // Clear the token from localStorage
+    localStorage.removeItem('authToken');
+    router.push('/');
     window.location.reload()
     console.log('logged out')
   } catch (error) {

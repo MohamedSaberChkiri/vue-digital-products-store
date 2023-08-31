@@ -30,7 +30,6 @@ const router = useRouter()
 const email = ref('');
 const password = ref('');
 
-
 const login = async (event) => {
   event.preventDefault();
 
@@ -40,7 +39,10 @@ const login = async (event) => {
       password: password.value,
     }, { withCredentials: true });
 
-    store.commit('setAuthToken', response.data.token); // Set authToken in the store
+    const token = response.data.token;
+
+    store.commit('setAuthToken', token); // Store the token in Vuex
+    localStorage.setItem('authToken', token); // Store the token in localStorage
 
     console.log(response.data.message); // "Login successful"
     router.push('/user'); // Navigate to the profile page
@@ -48,6 +50,7 @@ const login = async (event) => {
     console.error(error);
   }
 };
+
 </script>
 
 <style scoped>

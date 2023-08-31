@@ -15,6 +15,15 @@ const store = createStore({
     authToken: (state) => state.authToken,
     isAuthenticated: (state) => !!state.authToken, // New getter for authentication check
   },
+  actions :{
+    initializeStore({ commit }) {
+      const authToken = localStorage.getItem('authToken'); // Read the token from localStorage
+      if (authToken) {
+        commit('setAuthToken', authToken); // Initialize the store with the token
+      }
+    },
+  },
+  
 });
 
 export default store;

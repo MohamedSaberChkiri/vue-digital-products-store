@@ -96,12 +96,22 @@ app.post('/api/login', async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, 'germany', { expiresIn: '1h' });
 
-    return res.status(200).json({ token, message: 'Login successful' });
+    res.cookie('authToken', token, {
+      maxAge: 60 * 60 * 1000, // 1 hour
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
+
+    return res.status(200).json({ token, message: 'logged in' });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Server error' });
   }
 });
+
+
+
 
 app.get('/api/user', async (req, res) => {
   try {
