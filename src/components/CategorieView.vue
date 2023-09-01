@@ -1,13 +1,21 @@
 <template>
   <div class="container2">
-    <router-link to='/trending' class="ct-link">Trending</router-link>
+    <router-link to='/trending' autofocus class="ct-link">Trending</router-link>
     <router-link to='/latest' class="ct-link">Latest</router-link>
     <router-link to='/featured' class="ct-link">Featured</router-link>
 
   </div>
 </template>
 
-<script>
+<script setup>
+import {onMounted} from 'vue'
+import {useRouter} from 'vue-router'
+
+const router = useRouter()
+
+onMounted(()=>{
+    router.push('/trending')
+})
 
 
 
