@@ -30,20 +30,33 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
+const productSchema = new mongoose.Schema({
+  product_name: String,
+  categorie: String,
+  price: Number,
+  description : String
+});
+
+const Product = mongoose.model('Product', productSchema);
+
 const userSchema = new mongoose.Schema({
   firstname: String,
   lastname: String,
   email: String,
   password: String,
+  products: [{type: mongoose.Schema.Types.ObjectId, ref: 'Product'}]
 });
 
 const User = mongoose.model('User', userSchema);
+
+
 
 app.post('/api/register', async (req, res) => {
   try {
     const { firstname, lastname, email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
+
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
@@ -55,6 +68,7 @@ app.post('/api/register', async (req, res) => {
       lastname,
       email,
       password: hashedPassword,
+      products : []
     });
 
     await newUser.save();
