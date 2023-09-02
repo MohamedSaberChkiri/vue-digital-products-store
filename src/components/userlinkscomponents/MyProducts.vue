@@ -8,10 +8,10 @@
       </div>
       <div class="information">
         <form @submit.prevent="addProduct">
-          <input type="text" placeholder="Product Name" v-model="newProduct.name">
-          <input type="text" placeholder="Categorie" v-model="newProduct.category">
+          <input type="text" placeholder="Product Name" v-model="newProduct.product_name">
+          <input type="text" placeholder="Categorie" v-model="newProduct.categorie">
           <input type="text" placeholder="Price" v-model="newProduct.price">
-          <textarea placeholder="Description" cols="30" rows="5" style="resize: none;"></textarea>
+          <textarea placeholder="Description" cols="30" rows="5" style="resize: none;" v-model="newProduct.description"></textarea>
            <button type="submit">Add Product</button>
         </form>
       </div>
@@ -32,37 +32,53 @@
 
 <script setup>
   import SingleAddedProduct from "../userlinkscomponents/SingleAddedProduct.vue";
-
+import {ref} from 'vue'
   
-import { ref } from 'vue';
-import { products as initialProducts } from '../../data/userProducts'; // Import the products array
+import axios from 'axios'; // Import Axios for making HTTP requests
+const token = localStorage.getItem('authToken');
 
-const products = ref(initialProducts);
 const newProduct = ref({
-  name: '',
-  category: '',
+  product_name: '',
+  categorie: '',
   price: 0,
-  soldUnits: 0,
+  description : ''
 });
 
-const addProduct = () => {
-  // Create a deep copy of the newProduct object to avoid reactivity issues
-  const productCopy = JSON.parse(JSON.stringify(newProduct.value));
-  
-  // Assign a new unique ID
-  productCopy.id = Date.now();
-  
-  // Add the new product to the products array
-  products.value.push(productCopy);
-  
-  // Reset the form inputs
-  newProduct.value = {
-    name: '',
-    category: '',
-    price: 0,
-    soldUnits: 0,
-  };
+// Method to add a new product
+const addProduct = async () => {
+  try {
+     
+    // Send a POST request to your server to add the product
+     
+    const response = await axios.post('http://localhost:3000/api/addproduct', {
+     data: newProduct.value, 
+      // Send the product data to the server
+    
+    },{ headers: {
+    'Authorization': `Bearer ${token}`,
+  }});
+
+    if (response.status === 201) {
+      // Product added successfully
+      console.log('Product added successfully');
+     
+      // Optionally, you can reset the form fields here
+      newProduct.value = {
+        product_name: '',
+        categorie: '',
+        price: 0,
+        description: '',
+      };
+    } else {
+      // Handle other response statuses (e.g., error cases)
+      console.error('Failed to add product');
+    }
+  } catch (error) {
+    // Handle network errors or server errors
+    console.error('Error adding product:', error);
+  }
 };
+
 
 
 

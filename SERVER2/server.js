@@ -153,6 +153,44 @@ app.get('/api/user', async (req, res) => {
   }
 });
 
+app.post('/api/addproduct', async (req, res) => {
+  try {
+    const { product_name, categorie, price, description } = req.body.data;
+   
+        // Retrieve the user's ID from the JWT token in the request header
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+        const decoded = jwt.verify(token, 'germany');
+        const userId = decoded.userId;
+    
+
+    // Create a new product instance
+    const newProduct = new Product({
+      product_name,
+      categorie,
+      price,
+      description,
+    });
+
+    // Save the product to the database
+    await newProduct.save()
+
+  
+
+    // Find the user by their ID and push the product's ObjectId to their products array
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.products.push(newProduct); // Assuming 'products' is the name of the array field in the user schema
+    await user.save();
+
+    return res.status(201).json({ message: 'Product added successfully' });
+  } catch (error) {
+    console.error('Error adding product:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
 
 
 const tokenBlacklist = new Set();
