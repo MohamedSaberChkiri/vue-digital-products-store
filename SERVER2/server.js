@@ -34,7 +34,8 @@ const productSchema = new mongoose.Schema({
   product_name: String,
   categorie: String,
   price: Number,
-  description : String
+  description : String,
+  sold_units : Number
 });
 
 const Product = mongoose.model('Product', productSchema);
@@ -108,7 +109,7 @@ app.post('/api/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ userId: user._id }, 'germany', { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id }, 'germany', { expiresIn: '24h' });
 
  
 
@@ -156,7 +157,7 @@ app.get('/api/user', async (req, res) => {
 app.post('/api/addproduct', async (req, res) => {
   try {
     const { product_name, categorie, price, description } = req.body.data;
-   
+    
         // Retrieve the user's ID from the JWT token in the request header
         const token = req.header('Authorization')?.replace('Bearer ', '');
         const decoded = jwt.verify(token, 'germany');
@@ -169,6 +170,7 @@ app.post('/api/addproduct', async (req, res) => {
       categorie,
       price,
       description,
+      sold_units :0
     });
 
     // Save the product to the database
@@ -192,6 +194,66 @@ app.post('/api/addproduct', async (req, res) => {
   }
 });
 
+
+app.get('/api/getUserProducts', async (req, res) => {
+  try {
+    // Retrieve the user's ID from the JWT token in the request header
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const decoded = jwt.verify(token, 'germany');
+    const userId = decoded.userId;
+
+    // Find the user by their ID and populate their products
+    const user = await User.findById(userId).populate('products');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Send the user's products as a response
+    return res.status(200).json(user.products);
+  } catch (error) {
+    console.error('Error fetching user products:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.delete('/api/:id', async (req, res) => {
+  try {
+    const productId = req.params.id;
+
+    // Use the deleteOne method to remove the product
+    const result = await Product.deleteOne({ _id: productId });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Find the user by their ID
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const decoded = jwt.verify(token, 'germany');
+    const userId = decoded.userId;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Get the index of the product to remove
+    const productIndex = user.products.findIndex((product) => product.toString() === productId);
+
+    // Remove the product from the array
+    if (productIndex !== -1) {
+      user.products.splice(productIndex, 1);
+    }
+
+    // Save the updated user document
+    await user.save();
+
+    return res.status(200).json({ message: 'Product removed successfully' });
+  } catch (error) {
+    console.error('Error removing product:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
 
 const tokenBlacklist = new Set();
 

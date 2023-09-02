@@ -1,6 +1,7 @@
 <template>
  <div>
-    <table >
+   <p v-if="userProducts.length === 0">No products available.</p>
+    <table v-if="userProducts.length != 0">
       <thead>
         <tr>
           <th>ID</th>
@@ -12,14 +13,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="product in products" :key="product.id">
-          <td>{{ product.id }}</td>
-          <td>{{ product.name }}</td>
-          <td>{{ product.category }}</td>
+        <tr v-for="product in userProducts" :key="product._id">
+          <td>{{ product._id }}</td>
+          <td>{{ product.product_name }}</td>
+          <td>{{ product.categorie }}</td>
           <td>{{ product.price }}</td>
-          <td>{{ product.soldUnits }}</td>
+          <td>{{ product.sold_units }}</td>
           <td>
-            <button @click="removeProduct(product.id)">Remove</button>
+            <button @click="removeProduct(product._id)">Remove</button>
           </td>
         </tr>
       </tbody>
@@ -29,16 +30,45 @@
 
 <script setup>
 
+import axios from 'axios';
+import { ref ,onMounted} from 'vue';
 
-import { ref } from 'vue';
-import { products as initialProducts } from '../../data/userProducts'; // Import the products array
 
-const products = ref(initialProducts);
+const token = localStorage.getItem('authToken');
+const userProducts = ref([]);
 
-const removeProduct = (productId) => {
-  // Update the products array using the .value property of the ref
-  products.value = products.value.filter(product => product.id !== productId);
+const fetchUserProducts = async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/api/getUserProducts', {
+      headers: {
+        'Authorization': `Bearer ${token}`, // Include the JWT token in the request header
+      },
+    });
+    
+    userProducts.value = response.data;
+    
+  } catch (error) {
+    console.error('Error fetching user products:', error);
+  }
 };
+
+const removeProduct = async (id) => {
+  try {
+    // Interpolate the 'id' parameter into the URL
+    await axios.delete(`http://localhost:3000/api/${id}`, {
+      headers : {
+        'Authorization' : `Bearer ${token}`
+      }
+    });
+    console.log(`Product with ID ${id} removed successfully.`);
+    location.reload()
+  } catch (error) {
+    console.error(`Error removing product with ID ${id}:`, error);
+  }
+};
+onMounted(() => {
+  fetchUserProducts();
+});
 </script>
 
 <style scoped>

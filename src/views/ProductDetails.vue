@@ -22,14 +22,14 @@
     
         <div class="right-panel">
                   <div class="publisher">
-                      <div class="item-title">{{product.title}}</div>
+                      <div class="item-title" v-if="product">{{product.title}}</div>
                           <div class="profile">
                               
                                 <div class="ct2">
                                   <div class="profile-image"></div>
                                   <div class="pub-name"> user name</div>
                                 </div>
-                                  <div class="price">{{product.price}}$</div>
+                                  <div class="price" v-if="product">{{product.price}}$</div>
                                 
                           </div>
                      

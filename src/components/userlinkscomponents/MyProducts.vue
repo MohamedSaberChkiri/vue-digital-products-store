@@ -69,6 +69,7 @@ const addProduct = async () => {
         price: 0,
         description: '',
       };
+      location.reload()
     } else {
       // Handle other response statuses (e.g., error cases)
       console.error('Failed to add product');
