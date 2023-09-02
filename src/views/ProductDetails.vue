@@ -22,14 +22,14 @@
     
         <div class="right-panel">
                   <div class="publisher">
-                      <div class="item-title" v-if="product">{{product.title}}</div>
+                      <div class="item-title" >{{title}}</div>
                           <div class="profile">
                               
                                 <div class="ct2">
                                   <div class="profile-image"></div>
-                                  <div class="pub-name"> user name</div>
+                                  <div class="pub-name"> {{user_name}} {{last_name}}</div>
                                 </div>
-                                  <div class="price" v-if="product">{{product.price}}$</div>
+                                  <div class="price" >{{price}}$</div>
                                 
                           </div>
                      
@@ -76,16 +76,43 @@
 import {items} from '../data/items'
 import { useRoute, useRouter } from 'vue-router';
 import { addItemToCart } from '../data/cart.js';
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios';
 
+
+
+const product = items.find(item => item.id === Number(productId));
 
 const route = useRoute();
 const router = useRouter()
 const showSuccessMessage = ref(false);
 
+const user_name = ref()
+const last_name = ref()
+const title = ref()
+const price = ref()
+
 
 const productId = route.params.id;
-const product = items.find(item => item.id === Number(productId));
+
+
+const token = localStorage.getItem('authToken');
+
+async function fetchSingleProduct(){
+    const response = await axios.get(`http://localhost:3000/api/${productId}`,{
+      headers:{
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    user_name.value = response.data.user.firstname
+    last_name.value = response.data.user.lastname
+    title.value = response.data.item.product_name
+    price.value = response.data.item.price
+    
+}
+
+
+
 
   function AddItemToCart() {
       const item = {
@@ -102,6 +129,9 @@ const product = items.find(item => item.id === Number(productId));
   }, 3000); // Hide the success message after 3000 milliseconds (3 seconds)
     }
 
+
+
+
     const selectedImage = ref('image 5');
 const images = ['green', 'black', 'yellow', 'red'];
 
@@ -110,7 +140,9 @@ const selectImage = (image) => {
 };
 
 
-
+onMounted(()=>{
+  fetchSingleProduct()
+})
 
 </script>
 

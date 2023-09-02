@@ -77,7 +77,8 @@ onMounted(() => {
 table{
   border-collapse: collapse;
   width: 100%;
-  max-width: 600px; /* Adjust this as needed */
+  min-width: 400px;
+  max-width: 1000px; /* Adjust this as needed */
     margin: 0 auto;
   /* Table border */
   border: 1px solid #ccc;

@@ -214,7 +214,34 @@ app.get('/api/getUserProducts', async (req, res) => {
     console.error('Error fetching user products:', error);
     return res.status(500).json({ message: 'Server error' });
   }
+})
+
+app.get('/api/:id', async (req, res) => {
+  try {
+    const product_id = req.params.id;
+    // Find the user by their ID
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const decoded = jwt.verify(token, 'germany');
+    const userId = decoded.userId;
+
+    const user = await User.findById(userId);
+    const item = await Product.findById(product_id);
+
+    // Combine user and item into a single JSON object
+    const response = {
+      user,
+      item,
+    };
+
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    // Handle errors and send an appropriate response
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 });
+
+
 
 app.delete('/api/:id', async (req, res) => {
   try {
@@ -230,7 +257,7 @@ app.delete('/api/:id', async (req, res) => {
     // Find the user by their ID
     const token = req.header('Authorization')?.replace('Bearer ', '');
     const decoded = jwt.verify(token, 'germany');
-    const userId = decoded.userId;
+    const userId = decoded.userId
 
     const user = await User.findById(userId);
     if (!user) {
