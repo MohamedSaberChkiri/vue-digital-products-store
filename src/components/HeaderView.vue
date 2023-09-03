@@ -6,7 +6,7 @@
       <router-link to="/login" class="link" v-if="!showUser">Login</router-link>
       <router-link to="/register" class="link" v-if="!showUser">Sign Up</router-link>
       <router-link to="/user" class="link" v-if="showUser">My Profile</router-link>
-      <router-link to="/cart" class="link" id="cart">Cart </router-link>
+      <router-link to="/cart" class="link" id="cart" v-if="showUser">Cart </router-link>
       
     </div>
   </div>

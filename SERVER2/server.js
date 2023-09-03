@@ -30,12 +30,19 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
+const cartSchema = new mongoose.Schema({
+  product_id : String
+})
+const Cart = mongoose.model('Cart', cartSchema)
+
 const productSchema = new mongoose.Schema({
   product_name: String,
   categorie: String,
   price: Number,
   description : String,
-  sold_units : Number
+  sold_units : Number,
+  images : Array,
+  publisher : String
 });
 
 const Product = mongoose.model('Product', productSchema);
@@ -45,12 +52,37 @@ const userSchema = new mongoose.Schema({
   lastname: String,
   email: String,
   password: String,
-  products: [{type: mongoose.Schema.Types.ObjectId, ref: 'Product'}]
+  products: [{type: mongoose.Schema.Types.ObjectId, ref: 'Product'}],
+  Cart: [{type: mongoose.Schema.Types.ObjectId, ref: 'Cart'}]
 });
 
 const User = mongoose.model('User', userSchema);
 
+app.post('/api/addItemToCart', async (req, res) => {
+  try {
+    const id = req.body.id; // Get the product ID from the request body
 
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const decoded = jwt.verify(token, 'germany');
+    const userId = decoded.userId;
+
+    // Create a new Cart document with the product_id set to the received ID
+    const newItem = new Cart({
+      product_id: id
+    });
+
+    await newItem.save();
+
+    const user = await User.findById(userId);
+    user.Cart.push(newItem);
+    await user.save();
+
+    return res.status(200).json({ message: 'Item added to cart' });
+  } catch (error) {
+    console.error('Error adding item to cart:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+});
 
 app.post('/api/register', async (req, res) => {
   try {
@@ -156,13 +188,18 @@ app.get('/api/user', async (req, res) => {
 
 app.post('/api/addproduct', async (req, res) => {
   try {
-    const { product_name, categorie, price, description } = req.body.data;
+    const { product_name, categorie, price, description, images } = req.body.data;
     
         // Retrieve the user's ID from the JWT token in the request header
         const token = req.header('Authorization')?.replace('Bearer ', '');
         const decoded = jwt.verify(token, 'germany');
         const userId = decoded.userId;
-    
+
+     // Find the user by their ID and push the product's ObjectId to their products array
+     const user = await User.findById(userId);
+     if (!user) {
+       return res.status(404).json({ message: 'User not found' });
+     }
 
     // Create a new product instance
     const newProduct = new Product({
@@ -170,7 +207,9 @@ app.post('/api/addproduct', async (req, res) => {
       categorie,
       price,
       description,
-      sold_units :0
+      sold_units :0,
+      images,
+      publisher : userId
     });
 
     // Save the product to the database
@@ -178,11 +217,7 @@ app.post('/api/addproduct', async (req, res) => {
 
   
 
-    // Find the user by their ID and push the product's ObjectId to their products array
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
+   
 
     user.products.push(newProduct); // Assuming 'products' is the name of the array field in the user schema
     await user.save();

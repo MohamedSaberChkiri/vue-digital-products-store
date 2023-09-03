@@ -41,7 +41,9 @@ const newProduct = ref({
   product_name: '',
   categorie: '',
   price: 0,
-  description : ''
+  description : '',
+  images : '',
+  
 });
 
 // Method to add a new product

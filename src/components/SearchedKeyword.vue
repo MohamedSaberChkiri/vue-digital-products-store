@@ -1,7 +1,7 @@
 <template>
   <div class="centered-container">
     <div class="centered-div">
-      <SingleItem v-for="product in productsToShow" :key="product.id" :id='product.id' :title='product.title' :price='product.price' :qt='product.qt' />
+      <SingleItem  />
 
     </div>
   </div>
@@ -10,7 +10,7 @@
 <script>
 import SingleItem from './SingleItem.vue'
 import { ref, watch, computed } from 'vue'
-import {items} from '../data/items'
+
 
 
 export default{
@@ -34,7 +34,7 @@ export default{
     const products = ref([]);
 
    const fetchProductsForIds = () => {
-      products.value = items.filter((product) => props.result.includes(product.id));
+     
     };
 
     watch(() => props.result, () => {

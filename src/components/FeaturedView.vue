@@ -1,7 +1,7 @@
 <template>
   <div class="show-items" >
 
-     <SingleItem v-for="item in items" :key="item.id" :id="item.id" :title="item.title" :price="item.price" :qt="item.qt" />
+     <SingleItem/>
     
 
     </div>
@@ -10,7 +10,7 @@
 
 <script setup>
 import SingleItem from './SingleItem.vue'
-import {items} from '../data/items'
+
 
 
 

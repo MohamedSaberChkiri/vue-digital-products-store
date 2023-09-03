@@ -3,7 +3,7 @@
     <div class="image">
         <div class="inner-image">
             <div>
-            <button @click="addItemToCart(id)">Add to Cart</button>
+            <button @click="addItemToCart()">Add to Cart</button>
             <router-link :to="`/${id}`" class="show">Show</router-link>
             </div>
             
@@ -24,29 +24,29 @@
   </div>
 </template>
 
-<script>
-import { addItemToCart } from '../data/cart.js';
+<script setup>
+import axios from "axios";
+import {ref} from 'vue'
 
-export default {
-  props: {
-    id: Number,
-    title: String,
-    price: Number,
-    qt : Number,
-    
-  },
-  methods: {
-    addItemToCart() {
-      const item = {
-        id: this.id,
-        title: this.title,
-        price: this.price,
-        qt : this.qt
-      };
-      addItemToCart(item);
-    }
+const id = ref('')
+
+async function addItemToCart() {
+  try {
+    const token = localStorage.getItem('authToken'); // Retrieve the auth token from local storage
+    id.value = 123; // Replace with the actual id you want to send
+
+    const response = await axios.post('http://localhost:3000/api/addItemToCart', { id }, {
+      headers: {
+        'Authorization': `Bearer ${token}`, // Include the JWT token in the request header
+      },
+    });
+
+    console.log(response.data);
+  } catch (error) {
+    console.error('Error adding item to cart:', error);
   }
-};
+}
+
 </script>
 
 <style scoped>
