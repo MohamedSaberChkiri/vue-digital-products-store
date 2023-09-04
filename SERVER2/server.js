@@ -6,6 +6,8 @@ const bcrypt = require('bcrypt'); // Import bcrypt
 const cors = require('cors')
 const session = require('express-session')
 const jwt = require('jsonwebtoken')
+const multer = require('multer')
+const fs = require('fs');
 
 
 // Initialize Express app
@@ -52,11 +54,70 @@ const userSchema = new mongoose.Schema({
   lastname: String,
   email: String,
   password: String,
+  profile_picture: String,
   products: [{type: mongoose.Schema.Types.ObjectId, ref: 'Product'}],
   Cart: [{type: mongoose.Schema.Types.ObjectId, ref: 'Cart'}]
 });
 
 const User = mongoose.model('User', userSchema);
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // Specify the folder where you want to store uploaded images
+    cb(null, '../src/assets/profile_images'); // Adjust the folder path as needed
+  },
+  filename: (req, file, cb) => {
+    // Use a custom name pattern (e.g., the current timestamp + original file extension)
+    const timestamp = Date.now();
+    const originalname = file.originalname;
+    const extension = originalname.split('.').pop();
+    const filename = `${timestamp}.${extension}`;
+    cb(null, filename);
+  },
+});
+
+const upload_profile_picture = multer({ storage: storage });
+
+
+
+const path = require('path');
+
+app.post('/api/uploadProfileImage', upload_profile_picture.single("uploadProfileImage"), async (req, res) => {
+  try {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const decoded = jwt.verify(token, 'germany');
+    const userId = decoded.userId;
+
+    const user = await User.findById(userId);
+
+    const uploadedFileName = req.file.filename; // New uploaded filename
+    const oldProfilePictureFileName = user.profile_picture; // Old filename from the database
+
+    // Check if the user already has a profile picture and it's different from the new one
+    if (oldProfilePictureFileName && oldProfilePictureFileName !== uploadedFileName) {
+      // Construct the full path to the old profile picture using __dirname and the stored filename
+      const oldProfilePicturePath = path.join('../src/assets/profile_images', oldProfilePictureFileName);
+
+      // Check if the old profile picture file exists
+      if (fs.existsSync(oldProfilePicturePath)) {
+        // Delete the old profile picture file
+        fs.unlinkSync(oldProfilePicturePath);
+      }
+    }
+
+    // Update the user's profile_picture field with the new filename
+    user.profile_picture = uploadedFileName;
+    await user.save();
+    const responseToSend = `../src/data/profile_images/${uploadedFileName}`
+    res.send(responseToSend);
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+
+
 
 app.post('/api/addItemToCart', async (req, res) => {
   try {
@@ -100,6 +161,7 @@ app.post('/api/register', async (req, res) => {
       firstname,
       lastname,
       email,
+      profile_picture : '',
       password: hashedPassword,
       products : []
     });

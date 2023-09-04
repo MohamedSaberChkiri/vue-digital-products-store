@@ -8,9 +8,19 @@
 
 
         <div class="profile-picture">
-              <div class="image">image here</div>
-              
-              <button class="update-image"   style="color : white; font-size: 15px ;">Change Profile</button>
+            <div v-if="upp">
+              <div class="image" :style="{ backgroundImage: 'url(../assets/profile_images/' + upp + ')' }">
+
+
+              </div>
+              </div>
+
+             
+              <form @submit.prevent="uploadProfileImage">
+                <label for="profile-picture" id="change-p-label">Change Profile</label>
+                <input type="file" placeholder="Change profile" ref="fileInputRef" id="profile-picture" name="uploadProfileImage">
+                <input type="submit" value="Change">
+              </form>
         </div>
 
         <div class="links-container">
@@ -54,6 +64,7 @@ import { useStore } from 'vuex'; // Import useStore from vuex
 const user = ref(null);
 const router = useRouter();
 const store = useStore(); // Access the Vuex store instance
+const upp = ref(null)
 
 const defaultLink = ref(null);
 
@@ -79,14 +90,38 @@ const fetchUserProfile = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
+    
 
     user.value = response.data;
+    upp.value = response.data.profile_picture
+    console.log(upp.value)
+    
   } catch (error) {
     console.error(error);
     // Handle unauthorized or other errors
   }
 };
+const token = localStorage.getItem('authToken');
 
+const fileInputRef = ref(null);
+
+const uploadProfileImage = async () => {
+  const formData = new FormData();
+  formData.append('uploadProfileImage', fileInputRef.value.files[0]);
+
+  try {
+    const response = await axios.post('http://localhost:3000/api/uploadProfileImage', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    console.log(response.data)
+  } catch (error) {
+    console.error('Error uploading image:', error);
+  }
+};
 
 
 const logout = async () => {
@@ -113,16 +148,26 @@ onMounted(async () => {
 
 <style scoped>
 
-.update-image{
-  width: 150px;
-  border: 1px dashed #FDFDFF;
-  display: flex;
-  align-items: center;
-  background: transparent;
-  color: #FDFDFF;
-  justify-content: center;
-  height: 4vh;
+form{
+  display:flex;
+  flex-direction: column;
+}
+input[type="submit"]{
+  padding: 1vh;
+  width: fit-content;
+  border: 1px solid white;
+  background: none;
   cursor: pointer;
+  color: white;
+}
+#change-p-label{
+  background: white;
+  color: black;
+  padding: 1vh;
+}
+#profile-picture{
+    display: none;
+
 }
 .container{
   display: flex;
@@ -185,7 +230,9 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid black;
+  border: 1px solid white;
+  background-size: cover;
+  background-position: center;
   border-radius: 50%;
 }
 .username{
