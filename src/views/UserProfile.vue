@@ -12,9 +12,10 @@
              <img :src='userProfilePicture' alt="Profile Picture" />
 
              
-              <div>
-                <input type="file" @change="handleFileUpload" />
-                <button @click="uploadProfilePicture">Upload</button>
+              <div class="profile-changer">
+                <label for="image-field" id="profile-label">Choose Picture</label>
+                <input type="file" @change="handleFileUpload" id="image-field"/>
+                <button @click="uploadProfilePicture" id="upload-image-button" :disabled="!selectedFile">Upload</button>
               </div>
         </div>
 
@@ -24,8 +25,8 @@
             <router-link  to="/user/MyProducts" class="button">MY PRODUCTS</router-link >
             <router-link to="/user/PaymentMethod" class="button" >PAYMENT METHODS</router-link >
             <router-link  to="/user/ChangePassword" class="button" >CHANGE PASSWORD</router-link >
-            <button @click="logout" class="button">Logout</button>
-            <router-link to='/' class="button">go to store</router-link>
+            <button @click="logout" class="button ss">Logout</button>
+            <router-link to='/' class="button ss">go to store</router-link>
           
         </div>
 
@@ -132,6 +133,7 @@ axios.post('http://localhost:3000/api/upload', formData, {
     .then((response) => {
       // Assuming the server returns the profile picture URL
       userProfilePicture.value = response.data.profilePictureUrl;
+      location.reload()
     })
     .catch((error) => {
       console.error(error);
@@ -161,11 +163,38 @@ onMounted(async () => {
 
 
 <style scoped>
+#upload-image-button{
+  padding: .5vh 2vh;
+  border: 1px solid white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.profile-changer{
+  
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+  width: 200px;
+  height: 80px;
+}
+#image-field{
+  display: none;
+}
+
+#profile-label{
+  border: 1px dashed white;
+  padding: .5vh 2vh;
+  cursor: pointer;
+}
+
 
 img{
   width: 100px;
   height: 100px;
-  border: 1px solid white;
+  border: 3px solid white;
+  border-radius: 50%;
+  
 }
 .container{
   display: flex;
@@ -209,6 +238,15 @@ img{
   text-decoration: none;
   transition: .3s ease all;
   
+}
+.button.ss{
+  border: 1px solid white;
+  border-radius: 0;
+  width: 30%;
+  margin: 0 auto;
+  height: 5vh;
+  background: white;
+  color: black;
 }
 .links-container .button:focus{
   background: #FDFDFF;

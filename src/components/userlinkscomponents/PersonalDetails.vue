@@ -18,7 +18,7 @@
           
         </div>
         
-
+        <input type="submit" value="Submit" id="submitbutton">
 
       </form>
 
@@ -77,6 +77,15 @@ export default {
 
 <style scoped>
 
+#submitbutton{
+  width: 100px;
+  padding: .5vh;
+  background: none;
+  color: black;
+  border: 1px solid grey;
+  cursor: pointer;
+}
+
 
 .container6{
   margin: 5vh  auto;
@@ -117,8 +126,10 @@ form{
   .profile-pic{
     width: 100px;
     height: 100px;
-    border: 1px solid black;
-    position: relative;
+    border: 3px solid white;
+    border-radius: 50%;
+    box-shadow: 0px 0px 10px black;
+    
   }
  
   #yob{
