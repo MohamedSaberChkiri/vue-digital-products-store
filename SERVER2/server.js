@@ -8,6 +8,7 @@ const session = require('express-session')
 const jwt = require('jsonwebtoken')
 const multer = require('multer')
 const path = require('path')
+const fs = require('fs')
 
 
 
@@ -78,15 +79,25 @@ const upload = multer({ storage });
 
 app.post('/api/upload', upload.single('profilePicture'), async (req, res) => {
   try {
-    
-    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const token = req.header('Authorization')?.replace('Bearer ', '')
     const decoded = jwt.verify(token, 'germany');
     const userId = decoded.userId;
 
-    // Find the user by ID and update their profile picture field
-    const user = await User.findByIdAndUpdate(userId, {
-      profile_picture: req.file.filename, // Save the file name or path in the user document
-    });
+    // Find the user by ID to retrieve the current profile picture filename
+    const user = await User.findById(userId);
+
+    // Check if there's an existing profile picture filename
+    if (user.profile_picture) {
+      // Construct the correct path to the old profile picture
+      const oldProfilePicturePath = path.join(__dirname, 'uploads', user.profile_picture);
+
+      // Delete the old profile picture from the correct path
+      fs.unlinkSync(oldProfilePicturePath);
+    }
+
+    // Update the user's document with the new profile picture filename
+    user.profile_picture = req.file.filename;
+    await user.save();
 
     res.status(200).json({ message: 'Profile picture updated', user });
   } catch (error) {
