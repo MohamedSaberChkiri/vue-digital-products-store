@@ -1,12 +1,12 @@
 <template>
   <div class="container6">
 
-      <div class="profile-pic">image here <span>C</span></div>
+      <img class="profile-pic" :src="imagepicture">
 
       <form @submit.prevent>
-        <input type="text" value="first name">
-        <input type="text" value="last name">
-        <input type="email" value="email@example.com">
+        <input type="text" :value="username">
+        <input type="text" :value="userlastname">
+        <input type="email" :value="emailaddress">
         <div id="yob">  
             <label >Birthday</label>
             <input type="date">
@@ -25,25 +25,55 @@
   </div>
 </template>
 
-<script setup>
-import {ref, watch} from 'vue'
+<script>
+import { ref, watch, toRef } from 'vue';
 
-const isChecked= ref(false)
-const isChecked2= ref(false)
+export default {
 
-  watch(isChecked, (newValue) => {
+ props: {
+  user: Object, // Adjust the type as per your data structure
+  image : String
+},
+
+
+  setup(props) {
+    const isChecked = ref(false);
+    const isChecked2 = ref(false);
+
+    watch(isChecked, (newValue) => {
       if (newValue) {
         isChecked2.value = false;
       }
     });
 
-    // Watch for changes in isCheckedB and update isCheckedA accordingly
+  
     watch(isChecked2, (newValue) => {
       if (newValue) {
         isChecked.value = false;
       }
     });
+
+   
+  const username = toRef(props, 'user.firstname');
+    const userlastname = toRef(props, 'user.lastname');
+    const emailaddress = toRef(props, 'user.email');
+    const imagepicture = toRef(props, 'image');
+
+
+    return {
+      isChecked,
+      isChecked2,
+      username,
+      userlastname,
+      emailaddress,
+      imagepicture
+     
+    
+    };
+  },
+};
 </script>
+
 
 <style scoped>
 
@@ -78,7 +108,7 @@ form{
 
   }
 
-.profile-pic , .profile-pic span {
+.profile-pic {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,14 +120,7 @@ form{
     border: 1px solid black;
     position: relative;
   }
-  .profile-pic span{
-    width: 20px;
-    height: 20px;
-    border: 1px solid black;
-    position: absolute;
-    top: 90px;
-    right: -10px;
-  }
+ 
   #yob{
     display: flex;
     flex-direction: column;

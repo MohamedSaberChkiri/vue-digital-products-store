@@ -69,7 +69,8 @@ const routes = [
       {
         path: '/user/PersonalDetails',
         name :'pd',
-        component : ()=> import('../components/userlinkscomponents/PersonalDetails.vue')
+        component : ()=> import('../components/userlinkscomponents/PersonalDetails.vue'),
+        props : true
       },
       {
         path : '/user/ChangePassword',

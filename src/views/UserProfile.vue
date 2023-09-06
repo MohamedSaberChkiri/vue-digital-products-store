@@ -36,7 +36,7 @@
 
 <div class="right-side">
 
-  <router-view/>
+  <router-view :user="user" :image="userProfilePicture"/>
 
 </div>
 
@@ -141,9 +141,7 @@ axios.post('http://localhost:3000/api/upload', formData, {
 
 onMounted(async () => {
   await fetchUserProfile(); // Wait for data before rendering
-    if (defaultLink.value) {
-    router.push(defaultLink.value.$props.to);
-  }
+
 
     axios.get('http://localhost:3000/api/user/profile-picture',{
       headers:{
