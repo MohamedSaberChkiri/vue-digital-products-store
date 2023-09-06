@@ -20,7 +20,7 @@
 
         <div class="links-container">
 
-            <router-link  to="/user/PersonalDetails" class="button" ref="defaultLink" autofocus>PERSONAL DETAILS</router-link >
+            <router-link  to="/user/PersonalDetails" class="button" ref="defaultLink" >PERSONAL DETAILS</router-link >
             <router-link  to="/user/MyProducts" class="button">MY PRODUCTS</router-link >
             <router-link to="/user/PaymentMethod" class="button" >PAYMENT METHODS</router-link >
             <router-link  to="/user/ChangePassword" class="button" >CHANGE PASSWORD</router-link >
@@ -36,7 +36,7 @@
 
 <div class="right-side">
 
-  <router-view :user="user" :image="userProfilePicture"/>
+  <router-view v-if="user" :user="user" :image="userProfilePicture"/>
 
 </div>
 

@@ -3,10 +3,10 @@
 
       <img class="profile-pic" :src="imagepicture">
 
-      <form @submit.prevent>
-        <input type="text" :value="username">
-        <input type="text" :value="userlastname">
-        <input type="email" :value="emailaddress">
+      <form @submit.prevent v-if="user">
+        <input type="text" :value="username.firstname">
+        <input type="text" :value="userlastname.lastname">
+        <input type="email" :value="emailaddress.email">
         <div id="yob">  
             <label >Birthday</label>
             <input type="date">
@@ -54,9 +54,9 @@ export default {
     });
 
    
-  const username = toRef(props, 'user.firstname');
-    const userlastname = toRef(props, 'user.lastname');
-    const emailaddress = toRef(props, 'user.email');
+    const username = toRef(props, 'user');
+    const userlastname = toRef(props, 'user');
+    const emailaddress = toRef(props, 'user');
     const imagepicture = toRef(props, 'image');
 
 
