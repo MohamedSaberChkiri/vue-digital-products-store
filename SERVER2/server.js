@@ -7,7 +7,8 @@ const cors = require('cors')
 const session = require('express-session')
 const jwt = require('jsonwebtoken')
 const multer = require('multer')
-const fs = require('fs');
+const path = require('path')
+
 
 
 // Initialize Express app
@@ -61,63 +62,64 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
+
+
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Specify the folder where you want to store uploaded images
-    cb(null, '../src/assets/profile_images'); // Adjust the folder path as needed
+    cb(null, 'uploads/'); // Define the upload directory
   },
   filename: (req, file, cb) => {
-    // Use a custom name pattern (e.g., the current timestamp + original file extension)
-    const timestamp = Date.now();
-    const originalname = file.originalname;
-    const extension = originalname.split('.').pop();
-    const filename = `${timestamp}.${extension}`;
-    cb(null, filename);
+    cb(null, Date.now() + '-' + file.originalname);
   },
 });
 
-const upload_profile_picture = multer({ storage: storage });
+const upload = multer({ storage });
 
-
-
-const path = require('path');
-
-app.post('/api/uploadProfileImage', upload_profile_picture.single("uploadProfileImage"), async (req, res) => {
+app.post('/api/upload', upload.single('profilePicture'), async (req, res) => {
   try {
+    
     const token = req.header('Authorization')?.replace('Bearer ', '');
     const decoded = jwt.verify(token, 'germany');
     const userId = decoded.userId;
 
-    const user = await User.findById(userId);
+    // Find the user by ID and update their profile picture field
+    const user = await User.findByIdAndUpdate(userId, {
+      profile_picture: req.file.filename, // Save the file name or path in the user document
+    });
 
-    const uploadedFileName = req.file.filename; // New uploaded filename
-    const oldProfilePictureFileName = user.profile_picture; // Old filename from the database
-
-    // Check if the user already has a profile picture and it's different from the new one
-    if (oldProfilePictureFileName && oldProfilePictureFileName !== uploadedFileName) {
-      // Construct the full path to the old profile picture using __dirname and the stored filename
-      const oldProfilePicturePath = path.join('../src/assets/profile_images', oldProfilePictureFileName);
-
-      // Check if the old profile picture file exists
-      if (fs.existsSync(oldProfilePicturePath)) {
-        // Delete the old profile picture file
-        fs.unlinkSync(oldProfilePicturePath);
-      }
-    }
-
-    // Update the user's profile_picture field with the new filename
-    user.profile_picture = uploadedFileName;
-    await user.save();
-    const responseToSend = `../src/data/profile_images/${uploadedFileName}`
-    res.send(responseToSend);
+    res.status(200).json({ message: 'Profile picture updated', user });
   } catch (error) {
-    console.error('Error uploading image:', error);
-    res.status(500).send('Internal server error');
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+app.get('/api/user/profile-picture', async (req, res) => {
+  try {
+    
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const decoded = jwt.verify(token, 'germany');
+    const userId = decoded.userId;
+   
 
+    // Find the user by ID in your MongoDB database
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Return the user's profile picture URL (adjust the field name as needed)
+    return res.status(200).json({ profile_picture: user.profile_picture });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 app.post('/api/addItemToCart', async (req, res) => {
   try {

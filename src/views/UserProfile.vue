@@ -8,19 +8,14 @@
 
 
         <div class="profile-picture">
-            <div v-if="upp">
-              <div class="image" :style="{ backgroundImage: 'url(../assets/profile_images/' + upp + ')' }">
-
-
-              </div>
-              </div>
+          
+             <img :src='userProfilePicture' alt="Profile Picture" />
 
              
-              <form @submit.prevent="uploadProfileImage">
-                <label for="profile-picture" id="change-p-label">Change Profile</label>
-                <input type="file" placeholder="Change profile" ref="fileInputRef" id="profile-picture" name="uploadProfileImage">
-                <input type="submit" value="Change">
-              </form>
+              <div>
+                <input type="file" @change="handleFileUpload" />
+                <button @click="uploadProfilePicture">Upload</button>
+              </div>
         </div>
 
         <div class="links-container">
@@ -64,15 +59,11 @@ import { useStore } from 'vuex'; // Import useStore from vuex
 const user = ref(null);
 const router = useRouter();
 const store = useStore(); // Access the Vuex store instance
-const upp = ref(null)
+
 
 const defaultLink = ref(null);
 
-onMounted(() => {
-  if (defaultLink.value) {
-    router.push(defaultLink.value.$props.to);
-  }
-});
+
 
 const fetchUserProfile = async () => {
   try {
@@ -93,8 +84,8 @@ const fetchUserProfile = async () => {
     
 
     user.value = response.data;
-    upp.value = response.data.profile_picture
-    console.log(upp.value)
+  
+    
     
   } catch (error) {
     console.error(error);
@@ -102,26 +93,6 @@ const fetchUserProfile = async () => {
   }
 };
 const token = localStorage.getItem('authToken');
-
-const fileInputRef = ref(null);
-
-const uploadProfileImage = async () => {
-  const formData = new FormData();
-  formData.append('uploadProfileImage', fileInputRef.value.files[0]);
-
-  try {
-    const response = await axios.post('http://localhost:3000/api/uploadProfileImage', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-
-    console.log(response.data)
-  } catch (error) {
-    console.error('Error uploading image:', error);
-  }
-};
 
 
 const logout = async () => {
@@ -140,34 +111,63 @@ const logout = async () => {
   }
 };
 
+const selectedFile = ref(null);
+const userProfilePicture = ref('');
+
+const handleFileUpload = (event) => {
+  selectedFile.value = event.target.files[0];
+};
+
+const uploadProfilePicture = () => {
+  const token = store.getters.authToken ;
+  const formData = new FormData();
+  formData.append('profilePicture', selectedFile.value);
+
+  // Make an API request to upload the profile picture
+axios.post('http://localhost:3000/api/upload', formData, {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+})
+    .then((response) => {
+      // Assuming the server returns the profile picture URL
+      userProfilePicture.value = response.data.profilePictureUrl;
+    })
+    .catch((error) => {
+      console.error(error);
+      // Handle errors as needed
+    });
+};
+
 onMounted(async () => {
   await fetchUserProfile(); // Wait for data before rendering
+    if (defaultLink.value) {
+    router.push(defaultLink.value.$props.to);
+  }
+
+    axios.get('http://localhost:3000/api/user/profile-picture',{
+      headers:{
+        Authorization: `Bearer ${token}`,
+      }
+    }) // Adjust the endpoint accordingly
+    .then((response) => {
+      userProfilePicture.value = 'http://localhost:3000/uploads/' + response.data.profile_picture;
+      console.log(userProfilePicture.value)
+    })
+    .catch((error) => {
+      console.error(error);
+      // Handle errors as needed
+    });
 });
 </script>
 
 
 <style scoped>
 
-form{
-  display:flex;
-  flex-direction: column;
-}
-input[type="submit"]{
-  padding: 1vh;
-  width: fit-content;
+img{
+  width: 100px;
+  height: 100px;
   border: 1px solid white;
-  background: none;
-  cursor: pointer;
-  color: white;
-}
-#change-p-label{
-  background: white;
-  color: black;
-  padding: 1vh;
-}
-#profile-picture{
-    display: none;
-
 }
 .container{
   display: flex;
