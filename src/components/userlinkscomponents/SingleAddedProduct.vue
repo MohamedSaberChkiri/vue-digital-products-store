@@ -1,7 +1,7 @@
 <template>
  <div>
-   <p v-if="userProducts.length === 0">No products available.</p>
-    <table v-if="userProducts.length != 0">
+   <p v-if="Products && Products.length === 0">No products available.</p>
+    <table v-if="Products && Products.length !== 0">
       <thead>
         <tr>
           <th>ID</th>
@@ -13,7 +13,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="product in userProducts" :key="product._id">
+        <tr v-for="product in Products" :key="product._id">
           <td>{{ product._id }}</td>
           <td>{{ product.product_name }}</td>
           <td>{{ product.categorie }}</td>
@@ -28,47 +28,40 @@
   </div>
 </template>
 
-<script setup>
+<script>
 
-import axios from 'axios';
-import { ref ,onMounted} from 'vue';
-
-
+import {ref}  from 'vue'
+import axios from 'axios'
 const token = localStorage.getItem('authToken');
-const userProducts = ref([]);
 
-const fetchUserProducts = async () => {
-  try {
-    const response = await axios.get('http://localhost:3000/api/getUserProducts', {
-      headers: {
-        'Authorization': `Bearer ${token}`, // Include the JWT token in the request header
-      },
-    });
-    
-    userProducts.value = response.data;
-    
-  } catch (error) {
-    console.error('Error fetching user products:', error);
+export default{
+  props : {
+    userProducts : Object
   }
-};
+,
+  setup(props){
 
-const removeProduct = async (id) => {
-  try {
-    // Interpolate the 'id' parameter into the URL
-    await axios.delete(`http://localhost:3000/api/${id}`, {
-      headers : {
-        'Authorization' : `Bearer ${token}`
-      }
-    });
-    console.log(`Product with ID ${id} removed successfully.`);
-    location.reload()
-  } catch (error) {
-    console.error(`Error removing product with ID ${id}:`, error);
+    const Products = ref(props.userProducts)
+    
+    const removeProduct = async(id)=>{
+      const response = await axios.delete(`http://localhost:3000/api/${id}`,{
+        headers : {
+          Authorization : `Bearer ${token}`
+        }
+      })
+      location.reload()
+      console.log(response.data.message)
+
+    }
+
+
+  return{
+    Products, removeProduct
   }
-};
-onMounted(() => {
-  fetchUserProducts();
-});
+  }
+}
+
+
 </script>
 
 <style scoped>

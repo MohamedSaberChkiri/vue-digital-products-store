@@ -261,9 +261,28 @@ app.get('/api/user', async (req, res) => {
   }
 });
 
-app.post('/api/addproduct', async (req, res) => {
+
+
+const storage2 = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploadsForProducts');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload2 = multer({ storage: storage2 });
+
+app.post('/api/addproduct', upload2.single('images'),async (req, res) => {
   try {
-    const { product_name, categorie, price, description, images } = req.body.data;
+    const product_name = req.body.product_name;
+    const categorie = req.body.categorie;
+    const price = req.body.price;
+    const description = req.body.description;
+  
+    // Access uploaded image file in req.file
+    const imagePath = req.file.filename;
     
         // Retrieve the user's ID from the JWT token in the request header
         const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -283,7 +302,7 @@ app.post('/api/addproduct', async (req, res) => {
       price,
       description,
       sold_units :0,
-      images,
+      images : imagePath,
       publisher : userId
     });
 
@@ -322,7 +341,7 @@ app.get('/api/getUserProducts', async (req, res) => {
     return res.status(200).json(user.products);
   } catch (error) {
     console.error('Error fetching user products:', error);
-    return res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' })
   }
 })
 
@@ -408,6 +427,44 @@ app.post('/api/logout', (req, res) => {
   }
 });
 
+
+app.post('/api/changePassword', async(req, res)=>{
+  const oldpass = req.body.oldpassword
+  const newpass = req.body.newpassword
+  const repnewpass = req.body.repnewpassword
+
+  let falseOldpass = false
+  let passDontMatch = false
+  let success = false
+
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+  const decoded = jwt.verify(token, 'germany');
+  const userId = decoded.userId
+
+  const user = await User.findById(userId);
+  const passwordMatch = await bcrypt.compare(oldpass, user.password);
+  if(passwordMatch){
+    if(newpass === repnewpass){
+      const hashedPassword = await bcrypt.hash(newpass, 10);
+      user.password = hashedPassword
+      success = true
+      await user.save()
+    }else{
+      passDontMatch = true
+    }
+  }else{
+    falseOldpass = true
+  }
+
+  const dataToSend = {
+    falseOldpass,
+    passDontMatch,
+    success
+  }
+
+  res.send(dataToSend)
+
+})
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

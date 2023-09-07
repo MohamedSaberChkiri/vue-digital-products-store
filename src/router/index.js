@@ -99,7 +99,8 @@ const routes = [
       {
         path : '/user/myProducts',
         name : 'mp',
-        component : ()=> import('../components/userlinkscomponents/MyProducts.vue')
+        component : ()=> import('../components/userlinkscomponents/MyProducts.vue'),
+        props : true
         
       }
     ]

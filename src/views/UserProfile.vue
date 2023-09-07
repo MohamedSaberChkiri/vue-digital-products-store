@@ -37,7 +37,7 @@
 
 <div class="right-side">
 
-  <router-view v-if="user" :user="user" :image="userProfilePicture"/>
+  <router-view v-if="user" :user="user" :image="userProfilePicture" :userProducts="userProducts"/>
 
 </div>
 
@@ -60,7 +60,7 @@ import { useStore } from 'vuex'; // Import useStore from vuex
 const user = ref(null);
 const router = useRouter();
 const store = useStore(); // Access the Vuex store instance
-
+const userProducts = ref(null)
 
 const defaultLink = ref(null);
 
@@ -82,6 +82,13 @@ const fetchUserProfile = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    const response2 = await axios.get('http://localhost:3000/api/getUserProducts',{
+      headers : {
+        Authorization : `Bearer ${token}`
+      }
+    })
+    userProducts.value = response2.data
     
 
     user.value = response.data;
@@ -152,7 +159,7 @@ onMounted(async () => {
     }) // Adjust the endpoint accordingly
     .then((response) => {
       userProfilePicture.value = 'http://localhost:3000/uploads/' + response.data.profile_picture;
-      console.log(userProfilePicture.value)
+      
     })
     .catch((error) => {
       console.error(error);

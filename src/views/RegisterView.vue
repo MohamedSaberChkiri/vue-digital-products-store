@@ -11,7 +11,7 @@
     </div>
     <input type="email" placeholder="Email" id="email" v-model="email">
     <input type="password" placeholder="Password" id="password" v-model="password">
-    <input type="password" placeholder="Repeat Password" id="password">
+    <input type="password" placeholder="Repeat Password" id="password" v-model="repeatedpassword">
     <input type="submit" value="Open An Account" id="submit">
     <router-link to="/Login" id="register-link">Already have an Account ?</router-link>
   </form>
@@ -31,6 +31,9 @@ const firstname = ref('');
 const lastname = ref('');
 const email = ref('');
 const password = ref('');
+const repeatedpassword = ref('')
+
+
 
 const submitForm = () => {
   const userData = {
@@ -39,6 +42,7 @@ const submitForm = () => {
     email: email.value,
     password: password.value,
   };
+
 
   axios
     .post('http://localhost:3000/api/register', userData)

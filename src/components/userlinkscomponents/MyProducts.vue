@@ -4,7 +4,8 @@
     <div class="add-product">
       <div class="image">
         <label for="item-image">Browse</label>
-        <input type="file" placeholder="Browse" id="item-image">
+        <input type="file" placeholder="Browse" id="item-image" @change="onImageChange">
+
       </div>
       <div class="information">
         <form @submit.prevent="addProduct">
@@ -23,69 +24,76 @@
 
     <div class="display-products">
 
-        <SingleAddedProduct/>
+        <SingleAddedProduct :userProducts="userProducts" />
     </div>
 
   </div>
   
 </template>
 
-<script setup>
-  import SingleAddedProduct from "../userlinkscomponents/SingleAddedProduct.vue";
-import {ref} from 'vue'
-  
-import axios from 'axios'; // Import Axios for making HTTP requests
-const token = localStorage.getItem('authToken');
+<script>
+import SingleAddedProduct from "../userlinkscomponents/SingleAddedProduct.vue";
+import { ref } from 'vue';
+import axios from 'axios';
 
-const newProduct = ref({
-  product_name: '',
-  categorie: '',
-  price: 0,
-  description : '',
-  images : '',
-  
-});
+export default {
+  props:{
+    userProducts : Object
+  },
 
-// Method to add a new product
-const addProduct = async () => {
-  try {
-     
-    // Send a POST request to your server to add the product
-     
-    const response = await axios.post('http://localhost:3000/api/addproduct', {
-     data: newProduct.value, 
-      // Send the product data to the server
-    
-    },{ headers: {
-    'Authorization': `Bearer ${token}`,
-  }});
+  components: {
+    SingleAddedProduct,
+  },
 
-    if (response.status === 201) {
-      // Product added successfully
-      console.log('Product added successfully');
-     
-      // Optionally, you can reset the form fields here
-      newProduct.value = {
+  data() {
+    return {
+      token: localStorage.getItem('authToken'),
+      newProduct: ref({
         product_name: '',
         categorie: '',
         price: 0,
         description: '',
-      };
-      location.reload()
-    } else {
-      // Handle other response statuses (e.g., error cases)
-      console.error('Failed to add product');
+        images: '',
+      }),
+    };
+  },
+
+  methods: {
+     onImageChange(event) {
+    const file = event.target.files[0]; // Get the selected file
+    this.newProduct.images = file; // Assign the selected file to newProduct.images
+  },
+
+  async addProduct() {
+    try {
+      const formData = new FormData(); // Create a FormData object
+      formData.append('product_name', this.newProduct.product_name);
+      formData.append('categorie', this.newProduct.categorie);
+      formData.append('price', this.newProduct.price);
+      formData.append('description', this.newProduct.description);
+      formData.append('images', this.newProduct.images); // Add the image file to the FormData
+
+      const response = await axios.post(
+        'http://localhost:3000/api/addproduct',
+        formData, // Send the FormData containing both text data and the image
+        {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+            'Content-Type': 'multipart/form-data', // Set content type to multipart/form-data
+          },
+        }
+      );
+    console.log(response.data.message)
+      // ... handle response as before ...
+    } catch (error) {
+      // ... handle error as before ...
     }
-  } catch (error) {
-    // Handle network errors or server errors
-    console.error('Error adding product:', error);
-  }
-};
-
-
-
+  },
+    },
+}
 
 </script>
+
 
 <style scoped>
 

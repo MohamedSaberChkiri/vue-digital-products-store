@@ -140,7 +140,7 @@ form{
     gap: 1vh;
   }
   #gender-container{
-    width: 80%;
+    width: 300px;
     height: fit-content;
     
     display: flex;
