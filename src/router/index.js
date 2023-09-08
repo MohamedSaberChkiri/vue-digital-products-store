@@ -12,22 +12,26 @@ const routes = [
   {
     path: '/',
     name: 'home',
+    props: true,
     component: HomeView,
     children : [
 
       {path : '/featured',
       name : 'featured',
-     component : ()=> import ('../components/FeaturedView.vue')
+     component : ()=> import ('../components/FeaturedView.vue'),
+     props: true
     },
     {
       path: '/latest',
       name :'latest',
-      component : () => import ('../components/LatestView.vue')
+      component : () => import ('../components/LatestView.vue'),
+      props: true
     },
     {
       path: '/trending',
       name : 'trending',
-      component : () => import ('../components/TrendingView.vue')
+      component : () => import ('../components/TrendingView.vue'),
+      props: true
     }
 
     ]

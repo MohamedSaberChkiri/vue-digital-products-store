@@ -1,7 +1,7 @@
 <template>
  
   
-  <router-view/>
+  <router-view :productsArray="productsArray"/>
 
  
 </template>
@@ -9,7 +9,21 @@
 
 
 <script setup>
+import axios from 'axios'
+import {onMounted, ref} from 'vue'
 
+
+let productsArray = ref([])
+
+const fetchProduct = async()=>{
+  const response = await axios.get('http://localhost:3000/api/home')
+  productsArray.value = response
+ 
+}
+
+onMounted(()=>{
+  fetchProduct()
+})
 
 
 </script>

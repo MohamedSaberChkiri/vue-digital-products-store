@@ -7,9 +7,23 @@
   
 </template>
 
-<script setup>
+<script >
 import SingleItem from './SingleItem.vue'
+import {ref} from 'vue'
 
+export default{
+  components:{
+    SingleItem
+  }
+  ,
+  props:{
+    productsArray: Array
+  },
+  setup(props){
+    const products = ref(props.productsArray)
+    console.log(products.value)
+  }
+}
 
 
 </script>

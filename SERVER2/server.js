@@ -64,6 +64,29 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 
+app.get('/api/home', async (req, res) => {
+  try {
+    const products = await Product.find()
+      .populate({
+        path: 'publisher',
+        select: 'firstname lastname profile_picture',
+        model: 'User', // The model to populate from
+      })
+      .select('product_name categorie price description sold_units images publisher');
+
+    
+
+    res.json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+
+
 
 
 const storage = multer.diskStorage({
@@ -292,7 +315,7 @@ app.post('/api/addproduct', upload2.single('images'),async (req, res) => {
      // Find the user by their ID and push the product's ObjectId to their products array
      const user = await User.findById(userId);
      if (!user) {
-       return res.status(404).json({ message: 'User not found' });
+       return res.status(404).json({ message: 'User not found' })
      }
 
     // Create a new product instance
