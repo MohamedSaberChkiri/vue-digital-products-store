@@ -1,6 +1,6 @@
 <template>
   <div class="container3">
-    <div class="image">
+    <div class="image" :style="`background: url('${productImage}')`">
         <div class="inner-image">
             <div>
             <button @click="addItemToCart()">Add to Cart</button>
@@ -12,30 +12,48 @@
     </div>
     <div class="bottom-section">
         <div class="title-price">
-            <span>{{title}}</span>
+            <span>{{product.product_name}}</span>
             <span>  </span>
-            <span>{{price}}$</span>
+            <span>{{product.price}}$</span>
         </div>
         <div class="uimage-name">
-            <div class="user-image"></div>
-            <div class="name">name</div>
+            <img class="user-image" :src="userImage">
+            <div class="name">{{product.publisher.firstname}} {{product.publisher.lastname}}</div>
         </div>
     </div>
+
   </div>
+
 </template>
 
-<script setup>
+<script>
 import axios from "axios";
 import {ref} from 'vue'
 
-const id = ref('')
+
+
+
+export default {
+props:{
+    product: Object
+},
+
+
+    setup(props){
+
+        
+        const productImage = ref('http://localhost:3000/uploads/'+props.product.images)
+        const userImage = ref('http://localhost:3000/uploads/'+props.product.publisher.profile_picture)
+
+
 
 async function addItemToCart() {
   try {
+    const freshId = ref(props.product._id)
     const token = localStorage.getItem('authToken'); // Retrieve the auth token from local storage
-    id.value = 123; // Replace with the actual id you want to send
+     // Replace with the actual id you want to send
 
-    const response = await axios.post('http://localhost:3000/api/addItemToCart', { id }, {
+    const response = await axios.post('http://localhost:3000/api/addItemToCart', {freshId}, {
       headers: {
         'Authorization': `Bearer ${token}`, // Include the JWT token in the request header
       },
@@ -46,6 +64,19 @@ async function addItemToCart() {
     console.error('Error adding item to cart:', error);
   }
 }
+
+
+
+return{
+    addItemToCart,
+    productImage,
+    userImage
+}
+
+    }
+
+}
+
 
 </script>
 

@@ -288,7 +288,7 @@ app.get('/api/user', async (req, res) => {
 
 const storage2 = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploadsForProducts');
+    cb(null, 'uploads');
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));

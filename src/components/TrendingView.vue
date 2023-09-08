@@ -1,7 +1,7 @@
 <template>
   <div class="show-items">
 
-     <SingleItem  />
+      <SingleItem v-for="product in productsArray" :key="product._id" :product="product" />
 
     </div>
   
@@ -9,7 +9,7 @@
 
 <script >
 import SingleItem from './SingleItem.vue'
-import {ref} from 'vue'
+
 
 export default{
   components:{
@@ -17,13 +17,15 @@ export default{
   }
   ,
   props:{
-    productsArray: Array
+    productsArray: Object
   },
-  setup(props){
-    const products = ref(props.productsArray)
-    console.log(products.value)
-  }
-}
+
+  setup(){
+    
+    
+
+
+}}
 
 
 </script>

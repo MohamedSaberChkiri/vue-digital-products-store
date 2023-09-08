@@ -20,7 +20,7 @@ export default{
         FooterView
     },
     props:{
-        productsArray : Array
+        productsArray : Object
     }
 }
 </script>
