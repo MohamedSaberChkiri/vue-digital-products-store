@@ -22,7 +22,7 @@
                           <div class="profile">
                               
                                 <div class="ct2">
-                                  <div class="profile-image"></div>
+                                  <img class="profile-image" :src="pathToProfile">
                                   <div class="pub-name"> {{user_name}} {{last_name}}</div>
                                 </div>
                                   <div class="price" >{{price}}$</div>
@@ -70,7 +70,7 @@
 
 <script>
 
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { addItemToCart } from '../data/cart.js';
 import { onMounted, ref } from 'vue'
 import axios from 'axios';
@@ -78,6 +78,7 @@ import axios from 'axios';
 export default{
   setup(){
 const route = useRoute();
+const router = useRouter()
 
 const showSuccessMessage = ref(false);
 
@@ -87,6 +88,7 @@ const title = ref()
 const price = ref()
 const image = ref()
 const pathToImage = ref()
+const pathToProfile = ref()
 
 const productId = route.params.id;
 
@@ -107,7 +109,9 @@ async function fetchSingleProduct(){
 
     image.value = response.data.item.images[0]
     pathToImage.value = 'http://localhost:3000/uploads/'+image.value
-    console.log(pathToImage.value)
+    pathToProfile.value = 'http://localhost:3000/uploads/'+response.data.user.profile_picture
+    console.log(pathToProfile.value)
+    
    
     
    
@@ -132,7 +136,7 @@ onMounted(()=>{
 
 
     return{
-      showSuccessMessage, user_name, last_name,title, price, image, pathToImage,fetchSingleProduct, AddItemToCart
+      showSuccessMessage, user_name, last_name,title, price, image, pathToImage,fetchSingleProduct, AddItemToCart, pathToProfile, router
     }
 
 
@@ -242,7 +246,7 @@ hr{
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #000;
+ 
 }
 .ct2
 {
