@@ -48,7 +48,10 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { getCartItems, itemIdToRemove } from '../data/cart';
+import { getCartItems, itemIdToRemove } from '../data/cart'
+
+
+
 
 const cartItems = ref(getCartItems());
 const fees = ref(8);

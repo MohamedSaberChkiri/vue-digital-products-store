@@ -53,7 +53,7 @@
       <hr>
 
           <div class="buttons-conatainer">
-            <button @click="AddItemToCart(id)">Add to Cart</button>
+            <button @click="AddItemToCart(productId)">Add to Cart</button>
             <button>Buy Now</button>
           </div>
           
@@ -90,6 +90,7 @@ const image = ref()
 const pathToImage = ref()
 const pathToProfile = ref()
 
+
 const productId = route.params.id;
 
 
@@ -122,11 +123,9 @@ onMounted(()=>{
   fetchSingleProduct()
 })
 
-  function AddItemToCart() {
-      const item = {
+  function AddItemToCart(id) {
       
-      };
-      addItemToCart(item);
+      addItemToCart(id);
       
       showSuccessMessage.value = true;
   setTimeout(() => {
@@ -136,7 +135,7 @@ onMounted(()=>{
 
 
     return{
-      showSuccessMessage, user_name, last_name,title, price, image, pathToImage,fetchSingleProduct, AddItemToCart, pathToProfile, router
+      showSuccessMessage, user_name, last_name,title, price, image, pathToImage,fetchSingleProduct, AddItemToCart, pathToProfile, router,productId
     }
 
 
