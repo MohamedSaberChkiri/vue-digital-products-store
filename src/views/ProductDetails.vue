@@ -10,13 +10,9 @@
 
 
             <div class="item-image">
-                    <div class="single-image" :style="{ background: selectedImage }"></div>
+                    <img class="single-image" :src="pathToImage">
 
-                          <div class="other-images">
-                                  <div v-for="(image, index) in images" :key="index" class="image" @click="selectImage(image)">
-                                    {{ image }}
-                                  </div>
-                    </div>
+                      
   </div>
         </div>
     
@@ -72,26 +68,25 @@
 
 </template>
 
-<script setup>
+<script>
 
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { addItemToCart } from '../data/cart.js';
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import axios from 'axios';
 
-
-
-
-
+export default{
+  setup(){
 const route = useRoute();
-const router = useRouter()
+
 const showSuccessMessage = ref(false);
 
 const user_name = ref()
 const last_name = ref()
 const title = ref()
 const price = ref()
-
+const image = ref()
+const pathToImage = ref()
 
 const productId = route.params.id;
 
@@ -108,11 +103,20 @@ async function fetchSingleProduct(){
     last_name.value = response.data.user.lastname
     title.value = response.data.item.product_name
     price.value = response.data.item.price
+
+
+    image.value = response.data.item.images[0]
+    pathToImage.value = 'http://localhost:3000/uploads/'+image.value
+    console.log(pathToImage.value)
+   
+    
+   
     
 }
 
-
-
+onMounted(()=>{
+  fetchSingleProduct()
+})
 
   function AddItemToCart() {
       const item = {
@@ -127,19 +131,32 @@ async function fetchSingleProduct(){
     }
 
 
+    return{
+      showSuccessMessage, user_name, last_name,title, price, image, pathToImage,fetchSingleProduct, AddItemToCart
+    }
 
 
-    const selectedImage = ref('image 5');
-const images = ['green', 'black', 'yellow', 'red'];
-
-const selectImage = (image) => {
-  selectedImage.value = image;
-};
+  }
+}
 
 
-onMounted(()=>{
-  fetchSingleProduct()
-})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </script>
 
@@ -168,9 +185,12 @@ onMounted(()=>{
 }
 
 .single-image{
-  width: 70%;
+  width: 500px;
   height: 300px;
   border: 1px solid black;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 
 }
 

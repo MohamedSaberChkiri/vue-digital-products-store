@@ -1,10 +1,10 @@
 <template>
   <div class="container3">
-    <div class="image" :style="`background: url('${productImage}')`">
+    <div class="image" :style="`background: url('${productImage}'); background-size: contain; background-position: center; background-repeat: no-repeat;`">
         <div class="inner-image">
             <div>
             <button @click="addItemToCart()">Add to Cart</button>
-            <router-link :to="`/${id}`" class="show">Show</router-link>
+            <router-link :to="`/${product._id}`" class="show">Show</router-link>
             </div>
             
         </div>
@@ -53,11 +53,11 @@ async function addItemToCart() {
     const token = localStorage.getItem('authToken'); // Retrieve the auth token from local storage
      // Replace with the actual id you want to send
 
-    const response = await axios.post('http://localhost:3000/api/addItemToCart', {freshId}, {
+    const response = await axios.post('http://localhost:3000/api/addItemToCart', {
       headers: {
         'Authorization': `Bearer ${token}`, // Include the JWT token in the request header
       },
-    });
+    },{freshId});
 
     console.log(response.data);
   } catch (error) {
@@ -137,6 +137,7 @@ return{
     width:100%;
     height: 75%;
     background: rgb(255, 255, 255);
+   
     
 }
 .bottom-section{

@@ -112,7 +112,7 @@ app.post('/api/upload', upload.single('profilePicture'), async (req, res) => {
     // Check if there's an existing profile picture filename
     if (user.profile_picture) {
       // Construct the correct path to the old profile picture
-      const oldProfilePicturePath = path.join(__dirname, 'uploads', user.profile_picture);
+      const oldProfilePicturePath = path.join(__dirname, '/uploads/', user.profile_picture);
 
       // Delete the old profile picture from the correct path
       fs.unlinkSync(oldProfilePicturePath);
@@ -122,7 +122,7 @@ app.post('/api/upload', upload.single('profilePicture'), async (req, res) => {
     user.profile_picture = req.file.filename;
     await user.save();
 
-    res.status(200).json({ message: 'Profile picture updated', user });
+    res.status(200).json({ message: 'Profile picture updated', user })
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
@@ -130,12 +130,12 @@ app.post('/api/upload', upload.single('profilePicture'), async (req, res) => {
 });
 
 // Serve uploaded files statically
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 app.get('/api/user/profile-picture', async (req, res) => {
   try {
     
-    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const token = req.header('Authorization')?.replace('Bearer ', '')
     const decoded = jwt.verify(token, 'germany');
     const userId = decoded.userId;
    
@@ -398,9 +398,13 @@ app.get('/api/:id', async (req, res) => {
 app.delete('/api/:id', async (req, res) => {
   try {
     const productId = req.params.id;
-
+    const product = await Product.findById(productId)
+    const oldPicturePath = path.join(__dirname, '/uploads/', product.images[0]);
+    fs.unlinkSync(oldPicturePath)
     // Use the deleteOne method to remove the product
     const result = await Product.deleteOne({ _id: productId });
+    
+    
 
     if (result.deletedCount === 0) {
       return res.status(404).json({ message: 'Product not found' });
