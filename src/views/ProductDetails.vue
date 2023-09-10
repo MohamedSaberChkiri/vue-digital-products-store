@@ -94,14 +94,9 @@ const pathToProfile = ref()
 const productId = route.params.id;
 
 
-const token = localStorage.getItem('authToken');
 
 async function fetchSingleProduct(){
-    const response = await axios.get(`http://localhost:3000/api/${productId}`,{
-      headers:{
-        'Authorization': `Bearer ${token}`
-      }
-    })
+    const response = await axios.get(`http://localhost:3000/api/${productId}`)
     user_name.value = response.data.user.firstname
     last_name.value = response.data.user.lastname
     title.value = response.data.item.product_name

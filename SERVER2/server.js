@@ -49,7 +49,7 @@ const productSchema = new mongoose.Schema({
   publisher : String
 });
 
-const Product = mongoose.model('Product', productSchema);
+const Product = mongoose.model('Product', productSchema)
 
 const userSchema = new mongoose.Schema({
   firstname: String,
@@ -72,7 +72,7 @@ app.get('/api/home', async (req, res) => {
         select: 'firstname lastname profile_picture',
         model: 'User', // The model to populate from
       })
-      .select('product_name categorie price description sold_units images publisher');
+      .select('product_name categorie price description sold_units images publisher')
 
     
 
@@ -371,13 +371,13 @@ app.get('/api/getUserProducts', async (req, res) => {
 app.get('/api/:id', async (req, res) => {
   try {
     const product_id = req.params.id;
-    // Find the user by their ID
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    const decoded = jwt.verify(token, 'germany');
-    const userId = decoded.userId;
+    
 
-    const user = await User.findById(userId);
+
+    
     const item = await Product.findById(product_id);
+    const publisherID = item.publisher
+    const user = await User.findById(publisherID);
 
     // Combine user and item into a single JSON object
     const response = {
