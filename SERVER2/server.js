@@ -187,7 +187,8 @@ app.get('/api/getCartIds', async(req, res) =>{
   const decoded = jwt.verify(token, 'germany');
   const userId = decoded.userId;
 
-  const user = await User.findById(userId)
+  const user = await User.findById(userId).populate('Cart');
+
 
   const cartProductIds = user.Cart.map(cartItem => cartItem.product_id);
   console.log(cartProductIds)
