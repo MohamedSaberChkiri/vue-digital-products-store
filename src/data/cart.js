@@ -22,6 +22,6 @@ export async function getCartItems() {
     }
   })
 
-  console.log(response)
+  cart.push(response.data)
   return cart;
 }

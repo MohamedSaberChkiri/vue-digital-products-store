@@ -71,12 +71,8 @@ const removeFromCart = (id) => {
 };
 
 const fetchCartItems = () => {
-  console.log('cartItems:', cartItems.value);
-  console.log('productsArray:', props.productsArray);
-  const filteredItems = props.productsArray.filter(item => {
-    return cartItems.value.includes(item._id);
-  });
-  console.log('filteredItems:', filteredItems);
+  console.log(cartItems.value)
+  console.log(props.productsArray)
 };
 
 onMounted(()=>{
@@ -98,14 +94,10 @@ const decreaseQuantity = (item) => {
   }
 };
 
-const ComputedSubtotal = computed(() => {
-  return cartItems.value.reduce((sum, item) => {
-    return sum + item.price * item.qt;
-  }, 0);
-});
+
 
 const total = computed(() => {
-  return ComputedSubtotal.value + fees.value;
+  return fees.value;
 });
 
 const roundedTotal = computed(() => {
@@ -120,7 +112,7 @@ const roundedTotal = computed(() => {
 
 
   return{
-      removeFromCart, increaseQuantity, decreaseQuantity,roundedTotal, ComputedSubtotal, fees
+      removeFromCart, increaseQuantity, decreaseQuantity,roundedTotal, fees
   }
 }
 

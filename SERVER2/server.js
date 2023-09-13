@@ -191,7 +191,7 @@ app.get('/api/getCartIds', async(req, res) =>{
 
 
   const cartProductIds = user.Cart.map(cartItem => cartItem.product_id);
-  console.log(cartProductIds)
+  
 
   return res.send(cartProductIds)
 
