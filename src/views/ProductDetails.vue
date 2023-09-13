@@ -60,6 +60,7 @@
    </div>
 
    <div class="added-status" :class="{'sc': showSuccessMessage}">Added Successfully</div>
+   <div class="added-status login" :class="{'sc': showLoginMessage}">You Must Be Loged In</div>
 
 </div>
 
@@ -71,7 +72,7 @@
 <script>
 
 import { useRoute, useRouter } from 'vue-router';
-import { addItemToCart } from '../data/cart.js';
+import { addItemToCart, getCartItems } from '../data/cart.js';
 import { onMounted, ref } from 'vue'
 import axios from 'axios';
 
@@ -81,6 +82,7 @@ const route = useRoute();
 const router = useRouter()
 
 const showSuccessMessage = ref(false);
+const showLoginMessage = ref(false)
 
 const user_name = ref()
 const last_name = ref()
@@ -107,30 +109,58 @@ async function fetchSingleProduct(){
     pathToImage.value = 'http://localhost:3000/uploads/'+image.value
     pathToProfile.value = 'http://localhost:3000/uploads/'+response.data.user.profile_picture
     console.log(pathToProfile.value)
-    
-   
-    
-   
+  
     
 }
+
 
 onMounted(()=>{
   fetchSingleProduct()
 })
+const token = localStorage.getItem('authToken');
 
-  function AddItemToCart(id) {
-      
+async function AddItemToCart(id) {
+  if (token) {
+    try {
+      // First, add the item to the client-side cart
       addItemToCart(id);
-      
-      showSuccessMessage.value = true;
-  setTimeout(() => {
-    showSuccessMessage.value = false;
-  }, 3000); // Hide the success message after 3000 milliseconds (3 seconds)
+      console.log(getCartItems());
+
+      // Next, send a POST request to the server
+      const response = await axios.post(
+        'http://localhost:3000/api/addItemToCart',
+        { id }, // Include the ID in the request body
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Check the response and handle success or error as needed
+      if (response.status === 200) {
+        showSuccessMessage.value = true;
+        setTimeout(() => {
+          showSuccessMessage.value = false;
+        }, 3000);
+      } else {
+        // Handle the error case here
+        console.error('Error adding item to cart:', response.data);
+      }
+    } catch (error) {
+      console.error('Error adding item to cart:', error);
     }
+  } else {
+    showLoginMessage.value = true;
+    setTimeout(() => {
+      showLoginMessage.value = false;
+    }, 3000);
+  }
+}
 
 
     return{
-      showSuccessMessage, user_name, last_name,title, price, image, pathToImage,fetchSingleProduct, AddItemToCart, pathToProfile, router,productId
+      showSuccessMessage, user_name, last_name,title, price, image, pathToImage,fetchSingleProduct, AddItemToCart, pathToProfile, router,productId, showLoginMessage
     }
 
 
@@ -190,6 +220,11 @@ onMounted(()=>{
   background-position: center;
   background-repeat: no-repeat;
 
+}
+
+.added-status.login{
+  background: rgb(255, 145, 0);
+  border: 1px solid rgb(138, 110, 20);
 }
 
 .added-status{

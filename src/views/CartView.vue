@@ -46,20 +46,45 @@
 </template>
 
 
-<script setup>
-import { ref, computed } from 'vue';
+<script>
+import { ref, computed, onMounted } from 'vue';
 import { getCartItems, itemIdToRemove } from '../data/cart'
 
 
 
+export default{
+props:{
+  productsArray: Object
+},
 
-const cartItems = ref(getCartItems());
+setup(props){
+
+
+
+const cartItems = ref(getCartItems())
+
 const fees = ref(8);
 
 const removeFromCart = (id) => {
   itemIdToRemove(id);
   cartItems.value = getCartItems();
 };
+
+const fetchCartItems = () => {
+  console.log('cartItems:', cartItems.value);
+  console.log('productsArray:', props.productsArray);
+  const filteredItems = props.productsArray.filter(item => {
+    return cartItems.value.includes(item._id);
+  });
+  console.log('filteredItems:', filteredItems);
+};
+
+onMounted(()=>{
+  
+  fetchCartItems()
+})
+
+
 
 const increaseQuantity = (item) => {
   if (item.qt < 10) {
@@ -86,6 +111,24 @@ const total = computed(() => {
 const roundedTotal = computed(() => {
   return total.value.toFixed(2);
 });
+
+
+
+
+
+
+
+
+  return{
+      removeFromCart, increaseQuantity, decreaseQuantity,roundedTotal, ComputedSubtotal, fees
+  }
+}
+
+}
+
+
+
+
 </script>
 
 

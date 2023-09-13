@@ -61,7 +61,7 @@ const userSchema = new mongoose.Schema({
   Cart: [{type: mongoose.Schema.Types.ObjectId, ref: 'Cart'}]
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema)
 
 
 app.get('/api/home', async (req, res) => {
@@ -72,7 +72,7 @@ app.get('/api/home', async (req, res) => {
         select: 'firstname lastname profile_picture',
         model: 'User', // The model to populate from
       })
-      .select('product_name categorie price description sold_units images publisher')
+      .select('_id product_name categorie price description sold_units images publisher')
 
     
 
@@ -170,16 +170,31 @@ app.post('/api/addItemToCart', async (req, res) => {
 
     await newItem.save();
 
-    const user = await User.findById(userId);
+    const user = await User.findById(userId)
     user.Cart.push(newItem);
     await user.save();
 
-    return res.status(200).json({ message: 'Item added to cart' });
+    return res.status(200).json({ message: 'Item added to cart' })
   } catch (error) {
     console.error('Error adding item to cart:', error);
-    return res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' })
   }
 });
+
+
+app.get('/api/getCartIds', async(req, res) =>{
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+  const decoded = jwt.verify(token, 'germany');
+  const userId = decoded.userId;
+
+  const user = await User.findById(userId)
+
+  const cartProductIds = user.Cart.map(cartItem => cartItem.product_id);
+  console.log(cartProductIds)
+
+  return res.send(cartProductIds)
+
+})
 
 app.post('/api/register', async (req, res) => {
   try {
